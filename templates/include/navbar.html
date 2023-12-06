@@ -1,0 +1,125 @@
+{% load static %}
+{% load cart_tag %}
+    <!-- Remove "navbar-sticky" class to make navigation bar scrollable with the page.-->
+    <div class="navbar-sticky bg-light">
+      <div class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+          <a class="navbar-brand d-none d-sm-block me-3 flex-shrink-0" href="{% url "products:index" %}"><span class="text-danger"><b>O</b>DADOZ</span></a>
+          <a class="navbar-brand d-sm-none me-2" href="index.html"><span class="text-danger"><b>O</b>Z</span></a>
+          <!-- Search-->
+          <form action=""  method="get">
+          <div class="input-group d-none d-lg-flex flex-nowrap mx-4">
+            <i class="ci-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
+            <input class="form-control rounded-start w-100" type="text" placeholder="Search for products" name="query" id="query">
+            <select class="form-select flex-shrink-0" style="width: 10.5rem;">
+              <option>All categories</option>
+              <option>Computers</option>
+              <option>Smartphones</option>
+              <option>Headphones</option>
+            </select>
+          </div>
+        </form>
+          <!-- Toolbar-->
+          <div class="navbar-toolbar d-flex flex-shrink-0 align-items-center">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"><span class="navbar-toggler-icon"></span></button>
+            <a class="navbar-tool navbar-stuck-toggler" href="javascript:void(0)"><span class="navbar-tool-tooltip">Toggle menu</span>
+              <div class="navbar-tool-icon-box"><i class="navbar-tool-icon ci-menu"></i></div></a><a class="navbar-tool ms-1 ms-lg-0 me-n1 me-lg-2" href="#signin-modal" data-bs-toggle="modal">
+                {% if profile.image %}
+                <img class="rounded-circle mx-1" src="{{ profile.image.url }}" width="30" alt="Susan Gardner">
+                {% else %}
+                <div class="navbar-tool-icon-box"><i class="navbar-tool-icon ci-user"></i></div>
+                {% endif %}
+                {% if request.user.is_authenticated %}
+                <a href="{% url "auth_logout" %}"><div class="navbar-tool-text ms-n3"><small>Hello, logout</small>My {{ user.username }}
+                </div></a>
+                {% else %}
+                <a href="{% url "auth_login" %}"><div class="navbar-tool-text ms-n3"><small>Hello, Login</small>My Account</div> </a>
+                {% endif %}
+            </a>
+
+            <div class="navbar-tool dropdown ms-3"><a class="navbar-tool-icon-box bg-secondary dropdown-toggle" href="{% url "order:cart_detail" %}"><span class="navbar-tool-label">{{request.session.cart|length}}</span><i class="navbar-tool-icon ci-cart"></i></a><a class="navbar-tool-text" href="{% url "order:cart_detail" %}"><small>My Cart</small>${{cart_total_amount}}</a>
+              <!-- Cart dropdown-->
+              <div class="dropdown-menu dropdown-menu-end">
+                <div class="widget widget-cart px-3 pt-2 pb-3" style="width: 20rem;">
+                  <div style="height: 15rem;" data-simplebar data-simplebar-auto-hide="false">
+                    {% for key,value in request.session.cart.items %}
+                    <div class="widget-cart-item pb-2 border-bottom">
+                      <a href="{% url 'order:item_clear' key %}"><button class="btn-close text-danger" type="button" aria-label="Remove"><span aria-hidden="true">&times;</span></button></a>
+                      <div class="d-flex align-items-center"><a class="d-block flex-shrink-0" href="javascript:void(0)"><img src="{{value.image}}" width="64" alt="Product"></a>
+                        <div class="ps-2">
+                          <h6 class="widget-product-title"><a href="shop-single-v2.html">{{value.name}}</a></h6>
+                          <div class="widget-product-meta"><span class="text-accent me-2">${{value.price}}<small>00</small></span><span class="text-muted">x {{value.quantity}}</span></div>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+                  <div class="d-flex flex-wrap justify-content-between align-items-center py-3">
+                    <div class="fs-sm me-2 py-2"><span class="text-muted">Subtotal:</span><span class="text-accent fs-base ms-1">${{cart_total_amount}}<small>00</small></span></div>
+                    <a class="btn btn-outline-secondary btn-sm" href="{% url "order:cart_detail" %}">Expand cart<i class="ci-arrow-right ms-1 me-n1"></i></a>
+                  </div><a class="btn btn-primary btn-sm d-block w-100" href="{% url "order:checkout_detail" %}"><i class="ci-card me-2 fs-base align-middle"></i>Checkout</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="navbar navbar-expand-lg navbar-light navbar-stuck-menu mt-n2 pt-0 pb-2">
+        <div class="container">
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <!-- Search-->
+            <div class="input-group d-lg-none my-3"><i class="ci-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
+              <input class="form-control rounded-start" type="text" placeholder="Search for products">
+            </div>
+            <!-- Departments menu-->
+            <ul class="navbar-nav navbar-mega-nav pe-lg-2 me-lg-2">
+              <li class="nav-item dropdown"><a class="nav-link dropdown-toggle ps-lg-0" href="{% url "products:shop" %}" data-bs-toggle="dropdown" data-bs-auto-close="outside"><i class="ci-menu align-middle mt-n1 me-2"></i>Departments</a>
+                <ul class="dropdown-menu">
+                  {% for m in main_category %}
+                  <li class="dropdown mega-dropdown"><a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown"><i class="ci-laptop opacity-60 fs-lg mt-n1 me-2"></i>{{ m.title }}</a>
+                    <div class="dropdown-menu p-0">
+                      <div class="d-flex flex-wrap flex-sm-nowrap px-2">
+                        <div class="mega-dropdown-column pt-4 pb-0 py-sm-4 px-3">
+                          <div class="widget widget-links">
+                            {% for g in m.group_categories.all|slice:"0:2" %}
+                              <h6 class="fs-base mb-3">{{ g.title }}</h6>
+                              <ul class="widget-list">
+                                {% for subcategory in g.categories.all %}
+                                  <li class="widget-list-item pb-1"><a class="widget-list-link" href="{% url 'products:shop' %}?category={{subcategory.slug}}">{{subcategory.title}} </a></li>
+                                {% endfor %}
+                              </ul>
+                            {% endfor %}
+                          </div>
+                        </div>
+                        {% for g in m.group_categories.all|slice:"2:3" %}
+                          <div class="mega-dropdown-column py-4 px-3">
+                            <div class="widget widget-links">
+                              <h6 class="fs-base mb-3">{{ g.title }}</h6>
+                              <ul class="widget-list">
+                                {% for subcategory in g.categories.all %}
+                                  <li class="widget-list-item pb-1"><a class="widget-list-link" href="{% url 'products:shop' %}?category={{subcategory.slug}}">{{subcategory.title}}</a></li>
+                                {% endfor %}
+                              </ul>
+                            </div>
+                          </div> 
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </li>
+                  {% endfor %}
+                </ul>
+              </li>
+            </ul>
+            <!-- Primary menu-->
+            <ul class="navbar-nav">
+              <li class="nav-item dropdown {% if is_index %}current{% endif %}"><a class="nav-link dropdown-toggle" href="{% url "products:index" %}" >Home</a></li>
+              <li class="nav-item dropdown {% if is_shop %}current{% endif %}"><a class="nav-link dropdown-toggle" href="{% url "products:shop" %}" >Shop</a></li>
+              <li class="nav-item dropdown {% if is_account %}current{% endif %}"><a class="nav-link dropdown-toggle" href="{% url "order:account_profile" %}">Account</a>  
+              <li class="nav-item dropdown {% if is_about %}current{% endif %}"><a class="nav-link dropdown-toggle" href="{% url 'web:about' %}">About Us</a></li>
+              <li class="nav-item dropdown {% if is_contact %}current{% endif %}"><a class="nav-link dropdown-toggle" href="{% url 'web:contact' %}">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+ 

@@ -1,0 +1,53 @@
+{% load course_tags %}
+{% for store in filtered_products %}
+              <div class="col-md-4 col-sm-6 px-2 mb-4">
+                <div class="card product-card">
+                  {% if store.id %}
+                    <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in store.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
+                      <a href="{% url 'order:add_to_wishlist' store_id=store.id %}">
+                      {% if request.user in store.wishlisted_by.all %}
+                        <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                      {% else %}
+                        <i class="fa-regular fa-heart" style="color: #001d42;"></i>
+                      {% endif %}
+                      </a>
+                    </button>
+                  {% else %}
+                    <!-- Handle the case where p.id is empty or not valid -->
+                    <p>This product is not available.</p>
+                  {% endif %}
+                  <span class="round-r badge bg-danger rounded-pill badge-shadow">{{store.get_price}}<br> off</span>
+
+                    <a class="card-img-top d-block overflow-hidden" href="{{ store.get_absolute_url }}"><img src="{{store.image.url}}" alt="Product"></a>
+                  {% for i in store.get_offer_sale %}
+                    <img src="{{i.image.url}}" alt="" class="productssale" >    
+                  {% endfor %}
+                  <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="#">Sneakers &amp; Keds</a>
+                        <h3 class="product-title fs-sm"><a href="shop-single-v1.html">{{store.name}}</a></h3>
+                        <div class="d-flex justify-content-between">
+                          <div class="product-price"><span class="text-accent">${% discount_calculation  store.get_original_price store.get_price %}.<small>50</small></span>
+                            <del class="fs-sm text-muted">${{store.get_original_price}}.<small>50</small></del>
+                          </div>
+                          <div class="star-rating">
+                            {% for star in stars %}
+                              {% if star <= store.rating %}
+                            <i class="star-rating-icon ci-star-filled active"></i>
+                              {% else %}
+                            <i class="star-rating-icon ci-star"></i>
+                              {% endif %}
+                            {% endfor %}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-body card-body-hidden">
+                        <a href="{% url 'order:cart_add' store.id %}"><input type="submit" value="Add to Cart" class="btn btn-primary btn-sm d-block w-100 mb-2" ></a>
+                        <div class="text-center"><a class="nav-link-style fs-ms" href="#quick-view-{{store.id}}" data-bs-toggle="modal"><i class="ci-eye align-middle me-1"></i>Quick view</a></div>
+                      </div>
+                    </div>
+                    <hr class="d-sm-none">
+                  </div>
+                  {% empty %}
+                  <div class="col-12">
+                      <p>No products found for the selected price range.</p>
+                  </div>
+              {% endfor %}

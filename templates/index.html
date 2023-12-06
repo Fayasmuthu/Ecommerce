@@ -1,0 +1,454 @@
+{% extends "partials/base.html" %}
+{% load static %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+      <!-- Hero (Banners + Slider)-->
+      <section class="bg-secondary py-4 pt-md-5">
+        <div class="container py-xl-2">
+          <div class="row">
+            <!-- Slider     -->
+            <div class="col-xl-9 pt-xl-4 order-xl-2">
+              <div class="tns-carousel">
+                <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 1, &quot;controls&quot;: false, &quot;loop&quot;: false}">
+                  {% for hero in hero|slice:3 %}
+                  <div>
+                    <div class="row align-items-center">
+                      <div class="col-md-6 order-md-2"><img class="d-block mx-auto" src="{{hero.image_hero.url}}" alt="VR Collection"></div>
+                      <div class="col-lg-5 col-md-6 offset-lg-1 order-md-1 pt-4 pb-md-4 text-center text-md-start">
+                        <h2 class="fw-light pb-1 from-bottom">{{ hero.title_hero }}</h2>
+                        <h1 class="display-4 from-bottom delay-1">{{ hero.topic_hero }}</h1>
+                        <h5 class="fw-light pb-3 from-bottom delay-2">{{ hero.vendor_hero }}</h5>
+                        <div class="d-table scale-up delay-4 mx-auto mx-md-0"><a class="btn btn-primary btn-shadow" href="{% url "products:shop" %}?hero={{hero.slug}}">Shop Now<i class="ci-arrow-right ms-2 me-n1"></i></a></div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            <!-- Banner group-->
+            <div class="col-xl-3 order-xl-1 pt-4 mt-3 mt-xl-0 pt-xl-0">
+              <div class="table-responsive" data-simplebar>
+                <div class="d-flex d-xl-block"><a class="d-flex align-items-center bg-faded-info rounded-3 pt-2 ps-2 mb-4 me-4 me-xl-0" href="javascript:void(0)" style="min-width: 16rem;"><img src="{% static 'img/home/banners/banner-sm01.png' %}" width="125" alt="Banner">
+                    <div class="py-4 px-2">
+                      <h5 class="mb-2"><span class="fw-light">Next Gen</span><br>Video <span class="fw-light">with</span><br>360 Cam</h5>
+                      <div class="text-info fs-sm">Shop now<i class="ci-arrow-right fs-xs ms-1"></i></div>
+                    </div></a><a class="d-flex align-items-center bg-faded-warning rounded-3 pt-2 ps-2 mb-4 me-4 me-xl-0" href="javascript:void(0)" style="min-width: 16rem;"><img src="{% static 'img/home/banners/banner-sm02.png' %}" width="125" alt="Banner">
+                    <div class="py-4 px-2">
+                      <h5 class="mb-2"><span class="fw-light">Top Rated</span><br>Gadgets<br><span class="fw-light">are on </span>Sale</h5>
+                      <div class="text-warning fs-sm">Shop now<i class="ci-arrow-right fs-xs ms-1"></i></div>
+                    </div></a><a class="d-flex align-items-center bg-faded-success rounded-3 pt-2 ps-2 mb-4" href="javascript:void(0)" style="min-width: 16rem;"><img src="{% static 'img/home/banners/banner-sm03.png' %}" width="125" alt="Banner">
+                    <div class="py-4 px-2">
+                      <h5 class="mb-2"><span class="fw-light">Catch Big</span><br>Deals <span class="fw-light">on</span><br>Earbuds</h5>
+                      <div class="text-success fs-sm">Shop now<i class="ci-arrow-right fs-xs ms-1"></i></div>
+                    </div></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Products grid (Trending products)-->
+      <section class="container pt-5">
+        <!-- Heading-->
+        <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
+          
+          <h2 class="h3 mb-0 pt-3 me-2">SHOP BY CATEGORIES</h2>
+          <div class="pt-3"><a class="btn btn-outline-danger btn-sm" href="javascript:void(0)">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
+        </div>
+        <!-- Grid-->
+        <div class="row pt-2 mx-n2">
+          <!-- Product-->
+          {% for category in categories|slice:"0:6" %}
+          <div class="col-lg-2 col-md-4 col-sm-6 px-2 mb-4">
+            <div class="card product-card  ">
+              <div class="product-card-actions d-flex align-items-center"></div>
+              <a class="card-img-top d-block overflow-hidden" href="{% url 'products:shop' %}?category={{category.slug}}"><img src="{{category.image.url}}" alt="Product"></a>
+              <div class="card-body py-2 "><a class="product-meta d-block fs-xs pb-1 d-none" href="javascript:void(0)">Headphones</a>
+                <h3 class="product-title fs-sm text-center text-primary"><a href="javascript:void(0)">{{category.title}}</a></h3>
+                <p class="product-title fs-sm text-center">{{category.n_offer}}</p>
+              </div>
+            </div>
+            <hr class="d-sm-none">
+          </div>
+          {% endfor %}
+          <!-- Product-->
+        </div>
+      </section>
+      <!-- Promo banner-->
+      {% for i in offer_counter %}
+      <section class="container mt-4 mb-grid-gutter">
+          <div class="bg-faded-info rounded-3 py-4">
+            <div class="row align-items-center">
+              <div class="col-md-5">
+                <div class="px-4 pe-sm-0 ps-sm-5"><span class="badge bg-danger">Limited Offer</span>
+                  <h3 class="mt-4 mb-1 text-body fw-light">{{i.title_with}}</h3>
+                  <h2 class="mb-1">{{i.topic_hero}}</h2>
+                  <p class="h5 text-body fw-light">{{i.with_title}}</p>
+                  <div class="countdown py-2 h4" data-countdown="07/01/2023 07:00:00 PM">
+                    <div class="countdown-days"><span class="countdown-value"></span><span class="countdown-label text-muted">d</span></div>
+                    <div class="countdown-hours"><span class="countdown-value"></span><span class="countdown-label text-muted">h</span></div>
+                    <div class="countdown-minutes"><span class="countdown-value"></span><span class="countdown-label text-muted">m</span></div>
+                    <div class="countdown-seconds"><span class="countdown-value"></span><span class="countdown-label text-muted">s</span></div>
+                  </div><a class="btn btn-accent" href="javascript:void(0)">View offers<i class="ci-arrow-right fs-ms ms-1"></i></a>
+                </div>
+              </div>
+              <div class="col-md-7"><img src="{{i.image_hero.url}}" alt="iPad Pro Offer"></div>
+            </div>
+          </div>
+        </section>
+      {% endfor %}
+      <!-- Brands carousel-->
+      <section class="container mb-5">
+        <div class="tns-carousel border-end">
+          <div class="tns-carousel-inner" data-carousel-options="{ &quot;nav&quot;: false, &quot;controls&quot;: false, &quot;autoplay&quot;: true, &quot;autoplayTimeout&quot;: 4000, &quot;loop&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1},&quot;360&quot;:{&quot;items&quot;:2},&quot;600&quot;:{&quot;items&quot;:3},&quot;991&quot;:{&quot;items&quot;:4},&quot;1200&quot;:{&quot;items&quot;:4}} }">
+            <div><a class="d-block bg-white border py-4 py-sm-3 px-2" href="javascript:void(0)" style="margin-right: -.0625rem;"><img class="d-block mx-auto" src="{% static 'img/shop/brands/13.png' %}" style="width: 165px;" alt="Brand"></a></div>
+            <div><a class="d-block bg-white border py-4 py-sm-3 px-2" href="javascript:void(0)" style="margin-right: -.0625rem;"><img class="d-block mx-auto" src="{% static 'img/shop/brands/14.png' %}" style="width: 165px;" alt="Brand"></a></div>
+            <div><a class="d-block bg-white border py-4 py-sm-3 px-2" href="javascript:void(0)" style="margin-right: -.0625rem;"><img class="d-block mx-auto" src="{% static 'img/shop/brands/17.png' %}" style="width: 165px;" alt="Brand"></a></div>
+            <div><a class="d-block bg-white border py-4 py-sm-3 px-2" href="javascript:void(0)" style="margin-right: -.0625rem;"><img class="d-block mx-auto" src="{% static 'img/shop/brands/16.png' %}" style="width: 165px;" alt="Brand"></a></div>
+            <div><a class="d-block bg-white border py-4 py-sm-3 px-2" href="javascript:void(0)" style="margin-right: -.0625rem;"><img class="d-block mx-auto" src="{% static 'img/shop/brands/15.png' %}" style="width: 165px;" alt="Brand"></a></div>
+            <div><a class="d-block bg-white border py-4 py-sm-3 px-2" href="javascript:void(0)" style="margin-right: -.0625rem;"><img class="d-block mx-auto" src="{% static 'img/shop/brands/18.png' %}" style="width: 165px;" alt="Brand"></a></div>
+            <div><a class="d-block bg-white border py-4 py-sm-3 px-2" href="javascript:void(0)" style="margin-right: -.0625rem;"><img class="d-block mx-auto" src="{% static 'img/shop/brands/19.png' %}" style="width: 165px;" alt="Brand"></a></div>
+            <div><a class="d-block bg-white border py-4 py-sm-3 px-2" href="javascript:void(0)" style="margin-right: -.0625rem;"><img class="d-block mx-auto" src="{% static 'img/shop/brands/20.png' %}" style="width: 165px;" alt="Brand"></a></div>
+          </div>
+        </div>
+      </section>
+      <!-- ⚡Month refrigatory-->
+      <section class="container pt-2 mb-2">
+        <!-- Heading-->
+        <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
+          <h2 class="h3 mb-0 pt-3 me-2 ">⚡Month BIG SALE⚡</h2>
+          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="grocery-catalog.html">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
+        </div>
+        <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
+          <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
+            <!-- Product-->
+            {% for refr in refrigentor %}
+            <div>
+              <div class="card product-card card-static pb-3">
+                <span class="round-r badge bg-danger rounded-pill badge-shadow">36% <br> off</span>
+                {% if refr.id %}
+                    <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in offer.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
+                      <a href="{% url 'order:add_to_wishlist' store_id=refr.id %}">
+                      {% if request.user in refr.wishlisted_by.all %}
+                        <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                      {% else %}
+                        <i class="fa-regular fa-heart" style="color: #001d42;"></i>
+                      {% endif %}
+                      </a>
+                    </button>
+                  {% else %}
+                    <!-- Handle the case where p.id is empty or not valid -->
+                    <p>This product is not available.</p>
+                  {% endif %}
+                <a class="card-img-top d-block overflow-hidden" href="{{ refr.get_absolute_url }}"><img src="{{refr.image.url}}" alt="Product"></a>
+                <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
+                <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1 " href="#">{{refr.vendor}}</a>
+                  <h3 class="product-title fs-sm text-truncate"><a href="{{ refr.get_absolute_url }}">{{refr.name}}</a></h3>
+                  <div class="product-price"><span class="text-accent">₹17,590.<small>00</small></span>
+                    <del class="fs-sm text-muted">₹{{refr.get_original_price}}<small>00</small></del>
+                  </div>
+                </div>
+                <div class="product-floating-btn">
+                  <a href="{% url 'order:cart_add' refr.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
+
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+            <!-- Product-->
+            
+        </div>
+      </section> 
+      <!-- Laptop-->
+      <section class="container pt-2 mb-2">
+        <!-- Heading-->
+        <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
+          <h2 class="h3 mb-0 pt-3 me-2 ">LAPTOP</h2>
+          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="grocery-catalog.html">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
+        </div>
+        <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
+          <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
+            <!-- Product-->
+            {% for offer in offer_sale %}
+            <div>
+              <div class="card product-card card-static pb-3">
+                <span class="round-r badge bg-danger rounded-pill badge-shadow">30% <br> off</span>
+                {% if offer.id %}
+                    <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in offer.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
+                      <a href="{% url 'order:add_to_wishlist' store_id=offer.id %}">
+                      {% if request.user in offer.wishlisted_by.all %}
+                        <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                      {% else %}
+                        <i class="fa-regular fa-heart" style="color: #001d42;"></i>
+                      {% endif %}
+                      </a>
+                    </button>
+                  {% else %}
+                    <!-- Handle the case where p.id is empty or not valid -->
+                    <p>This product is not available.</p>
+                  {% endif %}
+                <a class="card-img-top d-block overflow-hidden" href="{{ offer.get_absolute_url }}"><img src="{{offer.image.url}}" alt="Product"></a>
+                {% for i in offer.get_offer_sale %}
+                <img src="{{i.image.url}}" alt="" class="productssale" >
+                {% endfor %}
+                <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="#">{{offer.vendor}}</a>
+                  <h3 class="product-title fs-sm text-truncate"><a href="{{ offer.get_absolute_url }}">{{offer.name}}</a></h3>
+                  <div class="product-price"><span class="text-accent">₹{{offer.get_price}}.<small>99</small></span>
+                    <del class="fs-sm text-muted">₹{{offer.get_original_price}}.<small>99</small></del>
+                  </div>
+                </div>
+                <div class="product-floating-btn">
+                  <a href="{% url 'order:cart_add' offer.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+      <!-- TV LCD-->
+      <section class="container pt-2 mb-2">
+        <!-- Heading-->
+        <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
+          <h2 class="h3 mb-0 pt-3 me-2 ">LED TV</h2>
+          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="grocery-catalog.html">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
+        </div>
+        <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
+          <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
+            <!-- Product-->
+            {% for led in led_tv %}
+            <div>
+              <div class="card product-card card-static pb-3">
+                <span class="round-r badge bg-danger rounded-pill badge-shadow">39% <br> off</span>
+                {% if led.id %}
+                    <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in led.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
+                      <a href="{% url 'order:add_to_wishlist' store_id=led.id %}">
+                      {% if request.user in led.wishlisted_by.all %}
+                        <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                      {% else %}
+                        <i class="fa-regular fa-heart" style="color: #001d42;"></i>
+                      {% endif %}
+                      </a>
+                    </button>
+                  {% else %}
+                    <!-- Handle the case where p.id is empty or not valid -->
+                    <p>This product is not available.</p>
+                  {% endif %}
+                <a class="card-img-top d-block overflow-hidden" href="{{ led.get_absolute_url }}"><img src="{{led.image.url}}" alt="Product"></a>
+                <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
+                <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="#">{{led.vendor}}</a>
+                  <h3 class="product-title fs-sm text-truncate"><a href="{{ led.get_absolute_url }}">{{led.name}}</a></h3>
+                  <div class="product-price"><span class="text-accent">₹13,990.<small>99</small></span>
+                    <del class="fs-sm text-muted"> ₹{{led.get_original_price}}<small>99</small></del>
+                  </div>
+                </div>
+                <div class="product-floating-btn">
+                  <a href="{% url 'order:cart_add' led.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+            <!-- Product--> 
+          </div>
+        </div>
+      </section>
+      <!-- KITCHEN APPLIANCES-->
+      <section class="container pt-2 mb-2">
+        <!-- Heading-->
+        <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
+          <h2 class="h3 mb-0 pt-3 me-2 ">KITCHEN APPLIANCES</h2>
+          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="grocery-catalog.html">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
+        </div>
+        <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
+          <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
+            <!-- Product-->
+            {% for kitchen in kitchen_appliance %}
+            <div>
+              <div class="card product-card card-static pb-3">
+                <span class="round-r badge bg-danger rounded-pill badge-shadow">60% <br> off</span>
+                {% if kitchen.id %}
+                    <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in kitchen.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
+                      <a href="{% url 'order:add_to_wishlist' store_id=kitchen.id %}">
+                      {% if request.user in kitchen.wishlisted_by.all %}
+                        <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                      {% else %}
+                        <i class="fa-regular fa-heart" style="color: #001d42;"></i>
+                      {% endif %}
+                      </a>
+                    </button>
+                  {% else %}
+                    <!-- Handle the case where p.id is empty or not valid -->
+                    <p>This product is not available.</p>
+                  {% endif %}
+                <a class="card-img-top d-block overflow-hidden" href="{{ kitchen.get_absolute_url }}"><img src="{{kitchen.image.url}}" alt="Product"></a>
+                <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
+                <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="#">{{kitchen.vendor}}</a>
+                  <h3 class="product-title fs-sm text-truncate"><a href="{{ kitchen.get_absolute_url }}">{{kitchen.name}}</a></h3>
+                  <div class="product-price"><span class="text-accent"> ₹1,398.<small>99</small></span>
+                    <del class="fs-sm text-muted">₹{{kitchen.get_original_price}}<small>99</small></del>
+                  </div>
+                </div>
+                <div class="product-floating-btn">
+                  <a href="{% url 'order:cart_add' kitchen.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+      <!-- Air-conditions -->
+      <section class="container pt-2 mb-2">
+        <!-- Heading-->
+        <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
+          <h2 class="h3 mb-0 pt-3 me-2 ">AIR CONDITIONER</h2>
+          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="grocery-catalog.html">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
+        </div>
+        <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
+          <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
+            <!-- Product-->
+            {% for air in air_condition %}
+            <div>
+              <div class="card product-card card-static pb-3">
+                <span class="round-r badge bg-danger rounded-pill badge-shadow">33% <br> off</span>
+                {% if air.id %}
+                    <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in air.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
+                      <a href="{% url 'order:add_to_wishlist' store_id=air.id %}">
+                      {% if request.user in air.wishlisted_by.all %}
+                        <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                      {% else %}
+                        <i class="fa-regular fa-heart" style="color: #001d42;"></i>
+                      {% endif %}
+                      </a>
+                    </button>
+                  {% else %}
+                    <!-- Handle the case where p.id is empty or not valid -->
+                    <p>This product is not available.</p>
+                  {% endif %}
+                <a class="card-img-top d-block overflow-hidden" href="{{ air.get_absolute_url }}"><img src="{{air.image.url}}" alt="Product"></a>
+                <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
+                <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="javascript:void(0)">{{air.vendor}}</a>
+                  <h3 class="product-title fs-sm text-truncate"><a href="{{ air.get_absolute_url }}">{{air.name}}</a></h3>
+                  <div class="product-price"><span class="text-accent">₹36,990.<small></small></span>
+                    <del class="fs-sm text-muted">₹{{air.get_original_price}}<small></small></del>
+                  </div>
+                </div>
+                <div class="product-floating-btn">
+                  <button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+      <!-- Product widgets-->
+      <section class="container pb-4 pb-md-5">
+        <div class="row">
+          <!-- Bestsellers-->
+          <div class="col-md-4 col-sm-6 mb-2 py-3">
+            <div class="widget">
+              {% if best_seller %}
+              <h3 class="widget-title">Bestsellers</h3>
+              {% for b in best_seller %}
+              <div class="d-flex align-items-center pb-2 border-bottom"><a class="d-block flex-shrink-0" href="javascript:void(0)"><img src="{% static 'img/shop/cart/widget/05.jpg' %}" width="64" alt="Product"></a>
+                <div class="ps-2">
+                  <h6 class="widget-product-title"><a href="javascript:void(0)">{{b.get_original_price}}</a></h6>
+                  <div class="widget-product-meta"><span class="text-accent">${{b.get_original_price}}<small>00</small></span></div>
+                </div>
+              </div>
+              {% endfor %}
+              <p class="mb-0">...</p><a class="fs-sm" href="javascript:void(0)">View more<i class="ci-arrow-right fs-xs ms-1"></i></a>
+              {% endif %}
+            </div>
+          </div>
+          <!-- New arrivals-->
+          <div class="col-md-4 col-sm-6 mb-2 py-3">
+            <div class="widget">
+              {% if new_arrival %}
+              <h3 class="widget-title">New arrivals</h3>
+              {% for n in new_arrival %}
+              <div class="d-flex align-items-center pb-2 border-bottom"><a class="d-block flex-shrink-0" href="javascript:void(0)"><img src="{% static 'img/shop/widget/06.jpg' %}" width="64" alt="Product"></a>
+                <div class="ps-2">
+                  <h6 class="widget-product-title"><a href="javascript:void(0)">{{n.name}}</a></h6>
+                  <div class="widget-product-meta"><span class="text-accent">${{n.get_original_price}}<small>00</small></span></div>
+                </div>
+              </div>
+              {% endfor %}
+              <p class="mb-0">...</p><a class="fs-sm" href="{% url "products:shop" %}">View more<i class="ci-arrow-right fs-xs ms-1"></i></a>
+              {% endif %}
+            </div>
+          </div>
+          <!-- Top rated-->
+          <div class="col-md-4 col-sm-6 mb-2 py-3">
+            <div class="widget">
+              {% if top_rated %}
+              <h3 class="widget-title">Top rated</h3>
+              {% for t in top_rated %}
+              <div class="d-flex align-items-center pb-2 border-bottom"><a class="d-block flex-shrink-0" href="javascript:void(0)"><img src="{% static 'img/shop/widget/10.jpg' %}" width="64" alt="Product"></a>
+                <div class="ps-2">
+                  <h6 class="widget-product-title"><a href="javascript:void(0)">{{t.name}}</a></h6>
+                  <div class="widget-product-meta"><span class="text-accent">$749.<small>99</small></span>
+                    <del class="text-muted fs-xs">${{t.get_original_price}}.<small>99</small></del>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+              <p class="mb-0">...</p><a class="fs-sm" href="{% url "products:shop" %}">View more<i class="ci-arrow-right fs-xs ms-1"></i></a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- YouTube feed-->
+      <section class="container pb-5 mb-md-3">
+        <div class="border rounded-3 p-3">
+          <div class="row">
+            <div class="col-md-4 mb-3 mb-md-0">
+              <div class="bg-secondary p-5 text-center"><img class="d-block mb-4 mx-auto" src="{% static 'img/home/yt-logo.png' %}" width="120" alt="YouTube">
+                <div class="d-flex justify-content-center align-items-center mb-4"><img class="me-2" src="{% static 'img/home/yt-subscribers.png' %}" width="126" alt="YouTube Subscribers"><span class="fs-sm">250k+</span></div><a class="btn btn-primary border-0 btn-sm mb-3" href="javascript:void(0)" style="background-color: #ff0000;"><i class="ci-add-user me-2"></i>Subscribe*</a>
+                <p class="fs-sm mb-0">*View latest gadgets reviews availables for purchase in our store.</p>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="d-flex flex-wrap justify-content-between align-items-center pt-3 pb-2">
+                <h2 class="h4 mb-3">Latest videos from Cartzilla channels</h2><a class="btn btn-outline-accent btn-sm mb-3" href="javascript:void(0)">More videos<i class="ci-arrow-right fs-xs ms-1 me-n1"></i></a>
+              </div>
+              <div class="row g-0">
+                <div class="col-lg-4 col-6 mb-3"><a class="d-block text-decoration-0 px-2" href="https://www.youtube.com/embed/vS93u75NnPo" data-bs-toggle="video">
+                    <div class="position-relative mb-2"><span class="badge bg-dark position-absolute bottom-0 end-0 mb-2 me-2">6:16</span><img class="w-100" src="{% static 'img/home/video/cover01.jpg' %}" alt="Video cover"></div>
+                    <h6 class="fs-sm pt-1">5 New Cool Gadgets You Must See on Cartzilla - Cheap Budget</h6></a></div>
+                <div class="col-lg-4 col-6 mb-3"><a class="d-block text-decoration-0 px-2" href="https://www.youtube.com/embed/B6LaYgGogf0" data-bs-toggle="video">
+                    <div class="position-relative mb-2"><span class="badge bg-dark position-absolute bottom-0 end-0 mb-2 me-2">7:27</span><img class="w-100" src="{% static 'img/home/video/cover02.jpg' %}" alt="Video cover"></div>
+                    <h6 class="fs-sm pt-1">5 Super Useful Gadgets on Cartzilla You Must Have in 2020</h6></a></div>
+                <div class="col-lg-4 col-6 mb-3"><a class="d-block text-decoration-0 px-2" href="https://www.youtube.com/embed/kB-ROfRS9V4" data-bs-toggle="video">
+                    <div class="position-relative mb-2"><span class="badge bg-dark position-absolute bottom-0 end-0 mb-2 me-2">6:20</span><img class="w-100" src="{% static 'img/home/video/cover03.jpg' %}" alt="Video cover"></div>
+                    <h6 class="fs-sm pt-1">Top 5 New Amazing Gadgets on Cartzilla You Must See</h6></a></div>
+                <div class="col-lg-4 col-6 mb-3 d-lg-none"><a class="d-block text-decoration-0 px-2" href="https://www.youtube.com/embed/sJK67XXE_Rg" data-bs-toggle="video">
+                    <div class="position-relative mb-2"><span class="badge bg-dark position-absolute bottom-0 end-0 mb-2 me-2">6:11</span><img class="w-100" src="{% static 'img/home/video/cover04.jpg' %}" alt="Video cover"></div>
+                    <h6 class="fs-sm fw-bold pt-1">5 Amazing Construction Inventions and Working Tools Available...</h6></a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Blog + Instagram info cards-->
+      <section class="container-fluid px-0">
+        <div class="row g-0">
+          <div class="col-md-6"><a class="card border-0 rounded-0 text-decoration-none py-md-4 bg-faded-primary" href="javascript:void(0)">
+              <div class="card-body text-center"><i class="ci-edit h3 mt-2 mb-4 text-primary"></i>
+                <h3 class="h5 mb-1">Read the blog</h3>
+                <p class="text-muted fs-sm">Latest store, fashion news and trends</p>
+              </div></a></div>
+          <div class="col-md-6"><a class="card border-0 rounded-0 text-decoration-none py-md-4 bg-faded-accent" href="javascript:void(0)">
+              <div class="card-body text-center"><i class="ci-instagram h3 mt-2 mb-4 text-accent"></i>
+                <h3 class="h5 mb-1">Follow on Instagram</h3>
+                <p class="text-muted fs-sm">#ShopWithCartzilla</p>
+              </div></a></div>
+        </div>
+      </section>
+    </main>
+   
+    {% endblock  %}

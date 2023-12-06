@@ -1,0 +1,12 @@
+{% extends "registration/registration_base.html" %}
+{% load i18n crispy_forms_tags %}
+
+{% block title %}{% trans "Logged out" %}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="mx-auto">
+        <p>{% trans "Successfully logged out" %}.</p>
+    </div>  
+</div>
+{% endblock %}

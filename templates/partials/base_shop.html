@@ -1,0 +1,246 @@
+{% load static %}
+{% load cart_tag %}
+{% load course_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<head>
+    <meta charset="utf-8">
+    <title>shop</title>
+    <!-- SEO Meta Tags-->
+    <meta name="description" content="Cartzilla - Bootstrap E-commerce Template">
+    <meta name="keywords" content="bootstrap, shop, e-commerce, market, modern, responsive,  business, mobile, bootstrap, html5, css3, js, gallery, slider, touch, creative, clean">
+    <meta name="author" content="Createx Studio">
+    <!-- Viewport-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Favicon and Touch Icons-->
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="mask-icon" color="#fe6a6a" href="safari-pinned-tab.svg">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Vendor Styles including: Font Icons, Plugins, etc.-->
+    <link rel="stylesheet" media="screen" href="{% static 'vendor/simplebar/dist/simplebar.min.css' %}"/>
+    <link rel="stylesheet" media="screen" href="{% static 'vendor/tiny-slider/dist/tiny-slider.css' %}"/>
+    <link rel="stylesheet" media="screen" href="{% static 'vendor/nouislider/dist/nouislider.min.css' %}"/>
+    <link rel="stylesheet" media="screen" href="{% static 'vendor/drift-zoom/dist/drift-basic.min.css' %}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Main Theme Styles + Bootstrap-->
+    <link rel="stylesheet" media="screen" href="{% static 'css/theme.min.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Include jQuery (if not already included) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Include noUiSlider library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.2/nouislider.min.js"></script>
+
+    <!-- Google Tag Manager-->
+    <script>
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      '../www.googletagmanager.com/gtm5445.html?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-WKV3GT5');
+    </script>
+
+
+    <script>
+      $(document).ready(function () {
+          $(".filter-checkbox").on('click', function () {
+              var filter_object = {};
+              $(".filter-checkbox").each(function (index,ele) {
+                  var filter_value = $(this).val();
+                  var filter_key = $(this).data('filter');
+                  console.log(filter_key, filter_value);
+                  filter_object[filter_key] = Array.from(document.querySelectorAll('input[data-filter=' + filter_key + ']:checked')).map(function (el) {
+                      return el.value;
+                  });
+              });
+          
+              $.ajax({
+                url: '{% url "products:filter-data" %}',
+                data: filter_object,
+                dataType: 'json',
+                success: function (res) {
+                    $("#filteredStore").html(res.data);
+                }
+            });
+          });
+      });
+  </script>
+
+  </head>
+  <!-- Body-->
+  <body class="handheld-toolbar-enabled">
+    <!-- Google Tag Manager (noscript)-->
+    <noscript>
+      <iframe src="http://www.googletagmanager.com/ns.html?id=GTM-WKV3GT5" height="0" width="0" style="display: none; visibility: hidden;"></iframe>
+    </noscript>
+
+    <main class="page-wrapper">
+        <!-- Quick View Modal-->
+    {% for store in stories %}
+    <div class="modal-quick-view modal fade" id="quick-view-{{store.id}}" tabindex="-1">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title product-title"><a href="shop-single-v1.html" data-bs-toggle="tooltip" data-bs-placement="right" title="Go to product page">{{store.name}}<i class="ci-arrow-right fs-lg ms-2"></i></a></h4>
+            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <!-- Product gallery-->
+              <div class="col-lg-7 pe-lg-0">
+                <div class="product-gallery">
+                  <div class="product-gallery-preview order-sm-2">
+                    <div class="product-gallery-preview-item active" id="first"><img class="image-zoom" src="{{store.image.url}}" data-zoom="{{store.image.url}}" alt="Product image">
+                      <div class="image-zoom-pane"></div>
+                    </div>
+                    <div class="product-gallery-preview-item" id="second"><img class="image-zoom" src="{% static 'img/shop/single/gallery/02.jpg' %}" data-zoom="{% static 'img/shop/single/gallery/02.jpg' %}" alt="Product image">
+                      <div class="image-zoom-pane"></div>
+                    </div>
+                    <div class="product-gallery-preview-item" id="third"><img class="image-zoom" src="{% static 'img/shop/single/gallery/03.jpg' %}" data-zoom="{% static 'img/shop/single/gallery/03.jpg' %}" alt="Product image">
+                      <div class="image-zoom-pane"></div>
+                    </div>
+                    <div class="product-gallery-preview-item" id="fourth"><img class="image-zoom" src="{% static 'img/shop/single/gallery/04.jpg' %}" data-zoom="{% static 'img/shop/single/gallery/04.jpg' %}" alt="Product image">
+                      <div class="image-zoom-pane"></div>
+                    </div>
+                  </div>
+                  <div class="product-gallery-thumblist order-sm-1"><a class="product-gallery-thumblist-item active" href="#first"><img src="{{store.image.url}}" alt="Product thumb"></a><a class="product-gallery-thumblist-item" href="#second"><img src="img/shop/single/gallery/th02.jpg" alt="Product thumb"></a><a class="product-gallery-thumblist-item" href="#third"><img src="img/shop/single/gallery/th03.jpg" alt="Product thumb"></a><a class="product-gallery-thumblist-item" href="#fourth"><img src="img/shop/single/gallery/th04.jpg" alt="Product thumb"></a></div>
+                </div>
+              </div>
+              <!-- Product details-->
+              <div class="col-lg-5 pt-4 pt-lg-0 image-zoom-pane">
+                <div class="product-details ms-auto pb-3">
+                  <div class="d-flex justify-content-between align-items-center mb-2"><a href="shop-single-v1.html#reviews">
+                      <div class="star-rating">
+                            {% for star in stars %}
+                              {% if star <= store.rating %}
+                            <i class="star-rating-icon ci-star-filled active"></i>
+                              {% else %}
+                            <i class="star-rating-icon ci-star"></i>
+                              {% endif %}
+                            {% endfor %}
+                      </div>
+                      <span class="d-inline-block fs-sm text-body align-middle mt-1 ms-1">{{store.rating}} Reviews</span></a>
+                    <button class="btn-wishlist" type="button" data-bs-toggle="tooltip" title="Add to wishlist"><i class="ci-heart"></i></button>
+                  </div>
+                  <div class="mb-3"><span class="h3 fw-normal text-accent me-1">${{store.get_price}}.<small>99</small></span>
+                    <del class="text-muted fs-lg me-3">${{store.get_original_price}}<small>00</small></del><span class="badge bg-danger badge-shadow align-middle mt-n2">Sale</span>
+                  </div>
+                  <div class="fs-sm mb-4"><span class="text-heading fw-medium me-1">Color:</span><span class="text-muted" id="colorOptionText">Red/Dark blue/White</span></div>
+                  {% comment %} <div class="text-center pb-2"> {% endcomment %}
+                 <div class="position-relative me-n4 mb-3">
+
+                    {% for i in store.get_image %}
+                      {% if i.image %}
+                        <div class="form-check form-option form-check-inline mb-2">
+                          <input class="form-check-input" type="radio" name="size1" id="s-75">
+                          {% comment %} <label class="form-option-label" for="s-75"></label> {% endcomment %}
+                          <img src="{{i.image.url}}" class="form-option-label"alt="">
+                        </div> 
+                        
+                       {% elif i.color %}  
+                        <div class="form-check form-option form-check-inline mb-2">
+                          <input class="form-check-input" type="radio" name="color1" id="color_{{ forloop.counter }}" data-bs-label="colorOptionText" value="Beige/White/Black">
+                          <label class="form-option-label rounded-circle" for="color_{{ forloop.counter }}"><span class="form-option-color rounded-circle" style="background-color:{{i.color.code}};"></span></label>
+                        </div>         
+                        {% else %}
+                        <div class="form-check form-option form-check-inline mb-2">
+                          <input class="form-check-input" type="radio" name="size2" id="xs">
+                          <label class="form-option-label" for="xs">{{i.size}}</label>
+                        </div>
+                      
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                  {% comment %} <div class="position-relative me-n4 mb-3">
+                    <div class="form-check form-option form-check-inline mb-2">
+                      <input class="form-check-input" type="radio" name="color" id="color1" data-bs-label="colorOptionText" value="Red/Dark blue/White" checked>
+                      <label class="form-option-label rounded-circle" for="color1"><span class="form-option-color rounded-circle" style="background-image: url(img/shop/single/color-opt-1.png)"></span></label>
+                    </div>
+                    <div class="form-check form-option form-check-inline mb-2">
+                      <input class="form-check-input" type="radio" name="color" id="color2" data-bs-label="colorOptionText" value="Beige/White/Black">
+                      <label class="form-option-label rounded-circle" for="color2"><span class="form-option-color rounded-circle" style="background-image: url(img/shop/single/color-opt-2.png)"></span></label>
+                    </div>
+                    <div class="form-check form-option form-check-inline mb-2">
+                      <input class="form-check-input" type="radio" name="color" id="color3" data-bs-label="colorOptionText" value="Dark grey/White/Mustard">
+                      <label class="form-option-label rounded-circle" for="color3"><span class="form-option-color rounded-circle" style="background-image: url(img/shop/single/color-opt-3.png)"></span></label>
+                    </div>
+                    <div class="product-badge product-available mt-n1"><i class="ci-security-check"></i>Product available</div>
+                  </div> {% endcomment %}
+                  <form class="mb-grid-gutter">
+                    <div class="mb-3">
+                      <label class="fw-medium pb-1" for="product-size">Size:</label>
+                      <select class="form-select" required id="product-size">
+                        <option value="">Select size</option>
+                        <option value="xs">XS</option>
+                        <option value="s">S</option>
+                        <option value="m">M</option>
+                        <option value="l">L</option>
+                        <option value="xl">XL</option>
+                      </select>
+                    </div>
+                    <div class="mb-3 d-flex align-items-center">
+                      <select class="form-select me-3" style="width: 5rem;">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                      </select>
+                      <button class="btn btn-primary btn-shadow d-block w-100" type="submit"><i class="ci-cart fs-lg me-2"></i>Add to Cart</button>
+                    </div>
+                  </form>
+                  <h5 class="h6 mb-3 pb-2 border-bottom"><i class="ci-announcement text-muted fs-lg align-middle mt-n1 me-2"></i>Product info</h5>
+                  <h6 class="fs-sm mb-2">Style</h6>
+                  <ul class="fs-sm ps-4">
+                    <li>Hooded top</li>
+                  </ul>
+                  <h6 class="fs-sm mb-2">Composition</h6>
+                  <ul class="fs-sm ps-4">
+                    <li>Elastic rib: Cotton 95%, Elastane 5%</li>
+                    <li>Lining: Cotton 100%</li>
+                    <li>Cotton 80%, Polyester 20%</li>
+                  </ul>
+                  <h6 class="fs-sm mb-2">Art. No.</h6>
+                  <ul class="fs-sm ps-4 mb-0">
+                    <li>183260098</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+      <!-- Navbar 3 Level (Light)-->
+      <header class="shadow-sm">
+        {% include "include/navbar.html" %}
+      </header>
+      
+      {% block content_detail %}      
+      {% endblock  %}
+      {% include "partials/footer.html" %}
+
+      <!-- Toolbar for handheld devices (Shop)-->
+      <div class="handheld-toolbar">
+        <div class="d-table table-layout-fixed w-100"><a class="d-table-cell handheld-toolbar-item" href="javascript:void(0)" data-bs-toggle="offcanvas" data-bs-target="#shop-sidebar"><span class="handheld-toolbar-icon"><i class="ci-filter-alt"></i></span><span class="handheld-toolbar-label">Filters</span></a><a class="d-table-cell handheld-toolbar-item" href="account-wishlist.html"><span class="handheld-toolbar-icon"><i class="ci-heart"></i></span><span class="handheld-toolbar-label">Wishlist</span></a><a class="d-table-cell handheld-toolbar-item" href="javascript:void(0)" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" onclick="window.scrollTo(0, 0)"><span class="handheld-toolbar-icon"><i class="ci-menu"></i></span><span class="handheld-toolbar-label">Menu</span></a><a class="d-table-cell handheld-toolbar-item" href="shop-cart.html"><span class="handheld-toolbar-icon"><i class="ci-cart"></i><span class="badge bg-primary rounded-pill ms-1">4</span></span><span class="handheld-toolbar-label">$265.00</span></a></div>
+      </div>
+      <!-- Back To Top Button--><a class="btn-scroll-top" href="#top" data-scroll><span class="btn-scroll-top-tooltip text-muted fs-sm me-2">Top</span><i class="btn-scroll-top-icon ci-arrow-up">   </i></a>
+      <!-- Vendor scrits: js libraries and plugins-->
+      <script src="{% static 'vendor/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+      <script src="{% static 'vendor/simplebar/dist/simplebar.min.js' %}"></script>
+      <script src="{% static 'vendor/tiny-slider/dist/min/tiny-slider.js' %}"></script>
+      <script src="{% static 'vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js' %}"></script>
+      <script src="{% static 'vendor/nouislider/dist/nouislider.min.js' %}"></script>
+      <script src="{% static 'vendor/drift-zoom/dist/Drift.min.js' %}"></script>
+      <!-- Main theme script-->
+      <script src="{% static 'js/theme.min.js' %}"></script>
+      <!-- Your custom JavaScript file (where you handle AJAX and other functionalities) -->
+    <script src="{% static 'js/custom.js' %}"></script>
+    </body>
+  </html>

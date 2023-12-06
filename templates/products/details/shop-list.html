@@ -1,0 +1,224 @@
+{% extends "partials/base_shop.html" %}
+{% load static %}
+{% load course_tags %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+{% block content_detail %}
+      <!-- Page Title-->
+      <div class="page-title-overlap bg1-dark pt-4">
+        <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+          <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-start">
+                <li class="breadcrumb-item"><a class="text-nowrap" href="{% url "products:index" %}"><i class="ci-home"></i>Home</a></li>
+                <li class="breadcrumb-item text-nowrap"><a href="{% url "products:shop" %}">Shop</a>
+                </li>
+                <li class="breadcrumb-item text-nowrap active" aria-current="page">List sidebar</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="order-lg-1 pe-lg-4 text-center text-lg-start">
+            <h1 class="h3 text-light mb-0"></h1>
+          </div>
+        </div>
+      </div>
+      <div class="container pb-5 mb-2 mb-md-4">
+        <div class="row">
+          <!-- Sidebar-->
+          <aside class="col-lg-4">
+            <!-- Sidebar-->
+            <div class="offcanvas offcanvas-collapse bg-white w-100 rounded-3 shadow-lg py-1" id="shop-sidebar" style="max-width: 22rem;">
+              <div class="offcanvas-header align-items-center shadow-sm">
+                <h2 class="h5 mb-0">Filters</h2>
+                <button class="btn-close ms-auto" type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+              </div>
+              <div class="offcanvas-body py-grid-gutter px-lg-grid-gutter">
+                <!-- Categories-->
+                <div class="widget widget-categories mb-4 pb-4 border-bottom">
+                  <h3 class="widget-title">Categories</h3>
+                  <div class="accordion mt-n1" id="shop-categories">
+                    {% for category in categories %}
+                      <div class="accordion-item">
+                          <h3 class="accordion-header">
+                              <a class="accordion-button collapsed" href="#{{category.slug}}" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="{{category.slug}}">
+                                  {{category.title}}
+                              </a>
+                          </h3>
+                          <div class="accordion-collapse collapse" id="{{category.slug}}" data-bs-parent="#shop-categories">
+                              <div class="accordion-body">
+                                  <div class="widget widget-links widget-filter">
+                                      <div class="input-group input-group-sm mb-2">
+                                          <input class="widget-filter-search form-control rounded-end" type="text" placeholder="Search">
+                                          <i class="ci-search position-absolute top-50 end-0 translate-middle-y fs-sm me-3"></i>
+                                      </div>
+                                      {% if category.subcategories.all %}
+                                          <ul class="widget-list widget-filter-list pt-1" style="height: 12rem;" data-simplebar data-simplebar-auto-hide="false">
+                                              {% for subcategory in category.subcategories.all %}
+                                                  <li class="widget-list-item widget-filter-item">
+                                                      <a class="widget-list-link d-flex justify-content-between align-items-center" href="?q={{subcategory.slug}}">
+                                                          <span class="widget-filter-item-text">{{ subcategory.title }}</span>
+                                                          <span class="fs-xs text-muted ms-3">{{subcategory.get_product_count}}</span>
+                                                      </a>
+                                                  </li>
+                                              {% endfor %}
+                                          </ul>
+                                      {% endif %}
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+                <!-- Price range-->
+                <div class="widget mb-4 pb-4 border-bottom">
+                  <h3 class="widget-title">Price</h3>
+                  <div class="range-slider" data-start-min="250" data-start-max="680" data-min="0" data-max="1000" data-step="1">
+                    <div class="range-slider-ui"></div>
+                    <div class="d-flex pb-1">
+                      <div class="w-50 pe-2 me-2">
+                        <div class="input-group input-group-sm"><span class="input-group-text">$</span>
+                          <input class="form-control range-slider-value-min" type="text">
+                        </div>
+                      </div>
+                      <div class="w-50 ps-2">
+                        <div class="input-group input-group-sm"><span class="input-group-text">$</span>
+                          <input class="form-control range-slider-value-max" type="text">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Filter by Brand-->
+                <div class="widget widget-filter mb-4 pb-4 border-bottom">
+                  <h3 class="widget-title">Brand</h3>
+                  <div class="input-group input-group-sm mb-2">
+                    <input class="widget-filter-search form-control rounded-end pe-5" type="text" placeholder="Search"><i class="ci-search position-absolute top-50 end-0 translate-middle-y fs-sm me-3"></i>
+                  </div>
+                  <ul class="widget-list widget-filter-list list-unstyled pt-1" style="max-height: 11rem;" data-simplebar data-simplebar-auto-hide="false">
+                    {% for b in brands %}
+                    <li class="widget-filter-item d-flex justify-content-between align-items-center mb-1">
+                      <div class="form-check">
+                        <input class="form-check-input filter-checkbox" type="checkbox" id="adidas-{{b.id}}" data-filter="brands" value="{{b.id}}">
+
+                        <label class="form-check-label widget-filter-item-text" for="adidas-{{b.id}}">{{b.name}}</label>
+                      </div><span class="fs-xs text-muted">{{ b.store_count }}</span>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </aside>
+          <!-- Content  -->
+          <section class="col-lg-8">
+            <!-- Toolbar-->
+            <div class="d-flex justify-content-center justify-content-sm-between align-items-center pt-2 pb-4 pb-sm-5">
+              <div class="d-flex flex-wrap">
+                <div class="d-flex align-items-center flex-nowrap me-3 me-sm-4 pb-3">
+                  <label class="text-light fs-sm opacity-75 text-nowrap me-2 d-none d-sm-block" for="sorting">Sort by:</label>
+                  <select class="form-select" id="sorting">
+                    <option>Popularity</option>
+                    <option>Low - Hight Price</option>
+                    <option>High - Low Price</option>
+                    <option>Average Rating</option>
+                    <option>A - Z Order</option>
+                    <option>Z - A Order</option>
+                  </select><span class="fs-sm text-light opacity-75 text-nowrap ms-2 d-none d-md-block">of  {{total_products}} products</span>
+                </div>
+              </div>
+              <div class="d-flex pb-3">
+                <a class="nav-link-style nav-link-light me-3 {% if stories.has_previous %}" href="?page={{ stories.previous_page_number }}"{% else %}href="#" disabled{% endif %}>
+                  <i class="ci-arrow-left"></i>
+                </a>
+                <span class="fs-md text-light">{{ stories.number }} / {{ stories.paginator.num_pages }}</span>
+                <a class="nav-link-style nav-link-light ms-3 {% if stories.has_next %}" href="?page={{ stories.next_page_number }}"{% else %}href="#" disabled{% endif %}>
+              
+                  <i class="ci-arrow-right"></i>
+                </a>
+              </div>
+              <div class="d-none d-sm-flex pb-3"><a class="btn btn-icon nav-link-style nav-link-light me-2" href="{% url "products:shop" %}"><i class="ci-view-grid"></i></a><a class="btn btn-icon nav-link-style bg-light text-dark disabled opacity-100" href="javascript:void(0)"><i class="ci-view-list"></i></a></div>
+            </div>
+            <!-- Products list-->
+            <!-- Product-->
+            {% for store in stories %}
+            <div class="card product-card product-list">
+              {% if store.id %}
+                    <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in store.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
+                      <a href="{% url 'order:add_to_wishlist' store_id=store.id %}">
+                      {% if request.user in store.wishlisted_by.all %}
+                        <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                      {% else %}
+                        <i class="fa-regular fa-heart" style="color: #001d42;"></i>
+                      {% endif %}
+                      </a>
+                    </button>
+                  {% else %}
+                    <!-- Handle the case where p.id is empty or not valid -->
+                    <p>This product is not available.</p>
+                  {% endif %}
+                <span class="round-r badge bg-danger rounded-pill badge-shadow">{{store.get_price}}<br> off</span>
+              <div class="d-sm-flex align-items-center"><a class="product-list-thumb" href="{{ store.get_absolute_url }}"><img src="{{store.image.url}}" alt="Product"></a>
+                <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="#">Sneakers &amp; Keds</a>
+                  <h3 class="product-title fs-base"><a href="shop-single-v1.html">{{store.name}}</a></h3>
+                  <div class="d-flex justify-content-between">
+                    <div class="product-price"><span class="text-accent">{% discount_calculation  store.get_original_price store.get_price %}.<small>00</small></span></div>
+                    <del class="fs-sm text-muted">${{store.get_original_price}}.<small>50</small></del>
+                    <div class="star-rating">
+                      {% for star in stars %}
+                        {% if star <= store.rating %}
+                      <i class="star-rating-icon ci-star-filled active"></i>
+                        {% else %}
+                      <i class="star-rating-icon ci-star"></i>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <div class="card-body card-body-hidden">
+                    <a href="{% url 'order:cart_add' store.id %}"><input type="submit" value="Add to Cart" class="btn btn-primary btn-sm mb-2" ></a>
+                    <div class="text-start"><a class="nav-link-style fs-ms" href="#quick-view-{{store.id}}" data-bs-toggle="modal"><i class="ci-eye align-middle me-1"></i>Quick view</a></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="border-top pt-3 mt-3"></div>
+            {% endfor %}
+            <!-- Product-->
+            
+            <!-- Product-->
+            
+            <div class="border-top pt-3 mt-3"></div>
+            <!-- Pagination-->
+            <nav class="d-flex justify-content-between pt-2" aria-label="Page navigation">
+              <ul class="pagination">
+                {% if stories.has_previous %}
+                {% comment %} <li class="page-item "><a class="page-link" href="?page=1">First</a></li> {% endcomment %}
+                <li class="page-item"><a class="page-link" href="?page={{stories.previous_page_number}}">
+                  <i class="ci-arrow-left me-2"></i>Prev</a>
+                </li>
+                {% endif %}
+              </ul>
+              <ul class="pagination">
+                <li class="page-item d-sm-none"><span class="page-link page-link-static">1 / 5</span></li>
+                {% for num in stories.paginator.page_range %}
+                {% if stories.number == num %}
+                <li class="page-item active d-none d-sm-block" aria-current="page">
+                  <span class="page-link">{{ num }}<span class="visually-hidden">(current)</span></span></li>
+                {% else %}
+                <li class="page-item d-none d-sm-block"><a class="page-link" href="?page={{ num }}">{{num}}</a></li>
+                {% endif %}
+                {% endfor %}
+              </ul>
+              <ul class="pagination">
+                {% if stories.has_next %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{stories.next_page_number}}" aria-label="Next">Next<i class="ci-arrow-right ms-2"></i></a>
+                </li>
+                {% comment %} <li class="page-item"><a class="page-link" href="?page={{stories.paginator.num_pages}}">Last</a></li> {% endcomment %}
+              {% endif %}
+              </ul>
+            </nav>
+          </section>
+        </div>
+      </div>
+    </main>
+    {% endblock  %}
