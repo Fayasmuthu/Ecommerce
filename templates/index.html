@@ -115,11 +115,12 @@
         </div>
       </section>
       <!-- ⚡Month refrigatory-->
-      <section class="container pt-2 mb-2">
+      {% if refrigentor %}
+      <section class="container pt-2 mb-2 d-none">
         <!-- Heading-->
         <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
           <h2 class="h3 mb-0 pt-3 me-2 ">⚡Month BIG SALE⚡</h2>
-          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="grocery-catalog.html">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
+          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="{% url "products:shop" %}?q={{ refrigentor.0.subcategory.slug }}">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
         </div>
         <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
           <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
@@ -143,7 +144,7 @@
                     <p>This product is not available.</p>
                   {% endif %}
                 <a class="card-img-top d-block overflow-hidden" href="{{ refr.get_absolute_url }}"><img src="{{refr.image.url}}" alt="Product"></a>
-                <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
+                {% comment %} <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" > {% endcomment %}
                 <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1 " href="#">{{refr.vendor}}</a>
                   <h3 class="product-title fs-sm text-truncate"><a href="{{ refr.get_absolute_url }}">{{refr.name}}</a></h3>
                   <div class="product-price"><span class="text-accent">₹17,590.<small>00</small></span>
@@ -157,16 +158,20 @@
               </div>
             </div>
             {% endfor %}
-            <!-- Product-->
-            
+            <!-- Product--> 
         </div>
       </section> 
+      {% else %}
+      <!-- Add a message or alternative content for when there are no products in refrigentor -->
+      <p>No products available at the moment.</p>
+      {% endif %}
       <!-- Laptop-->
-      <section class="container pt-2 mb-2">
+      {% if offer_sale %}
+      <section class="container pt-2 mb-2 ">
         <!-- Heading-->
         <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
           <h2 class="h3 mb-0 pt-3 me-2 ">LAPTOP</h2>
-          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="grocery-catalog.html">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
+          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="{% url "products:shop" %}?q={{ offer_sale.0.subcategory.slug }}">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
         </div>
         <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
           <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
@@ -208,12 +213,14 @@
           </div>
         </div>
       </section>
+      {% endif %}
       <!-- TV LCD-->
+      {% if led_tv %}
       <section class="container pt-2 mb-2">
         <!-- Heading-->
         <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
           <h2 class="h3 mb-0 pt-3 me-2 ">LED TV</h2>
-          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="grocery-catalog.html">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
+          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="{% url "products:shop" %}?q={{ led_tv.0.subcategory.slug }}">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
         </div>
         <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
           <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
@@ -254,12 +261,14 @@
           </div>
         </div>
       </section>
+      {% endif %}
       <!-- KITCHEN APPLIANCES-->
+      {% if kitchen_appliance %}
       <section class="container pt-2 mb-2">
         <!-- Heading-->
         <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
           <h2 class="h3 mb-0 pt-3 me-2 ">KITCHEN APPLIANCES</h2>
-          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="grocery-catalog.html">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
+          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="{% url "products:shop" %}?q={{ kitchen_appliance.0.subcategory.slug }}">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
         </div>
         <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
           <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
@@ -299,12 +308,14 @@
           </div>
         </div>
       </section>
+      {% endif %}
       <!-- Air-conditions -->
-      <section class="container pt-2 mb-2">
+      {% if air_condition %}
+      <section class="container pt-2 mb-2 d-none">
         <!-- Heading-->
         <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
           <h2 class="h3 mb-0 pt-3 me-2 ">AIR CONDITIONER</h2>
-          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="grocery-catalog.html">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
+          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="{% url "products:shop" %}?q={{ air_condition.0.subcategory.slug }}">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
         </div>
         <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
           <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
@@ -344,6 +355,108 @@
           </div>
         </div>
       </section>
+      {% endif %} 
+      <!-- Air-conditions -->
+      {% if computer_a_printers %}
+      <section class="container pt-2 mb-2">
+        <!-- Heading-->
+        <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
+          <h2 class="h3 mb-0 pt-3 me-2 ">COMPUTER A PRINTERS</h2>
+          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="{% url "products:shop" %}?q={{ air_condition.0.subcategory.slug }}">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
+        </div>
+        <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
+          <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
+            <!-- Product-->
+            {% for i in computer_a_printers %}
+            <div>
+              <div class="card product-card card-static pb-3">
+                <span class="round-r badge bg-danger rounded-pill badge-shadow">33% <br> off</span>
+                {% if i.id %}
+                    <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in air.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
+                      <a href="{% url 'order:add_to_wishlist' store_id=i.id %}">
+                      {% if request.user in i.wishlisted_by.all %}
+                        <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                      {% else %}
+                        <i class="fa-regular fa-heart" style="color: #001d42;"></i>
+                      {% endif %}
+                      </a>
+                    </button>
+                  {% else %}
+                    <!-- Handle the case where p.id is empty or not valid -->
+                    <p>This product is not available.</p>
+                  {% endif %}
+                <a class="card-img-top d-block overflow-hidden" href="{{ i.get_absolute_url }}"><img src="{{i.image.url}}" alt="Product"></a>
+                <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
+                <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="javascript:void(0)">{{i.vendor}}</a>
+                  <h3 class="product-title fs-sm text-truncate"><a href="{{ i.get_absolute_url }}">{{i.name}}</a></h3>
+                  <div class="product-price"><span class="text-accent">₹36,990.<small></small></span>
+                    <del class="fs-sm text-muted">₹{{i.get_original_price}}<small></small></del>
+                  </div>
+                </div>
+                <div class="product-floating-btn">
+                  <button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+      {% endif %}
+      <section class="container d-none">
+        <div class="row">
+          <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
+            <h2 class="h3 mb-0 pt-3 me-3">Discounted products</h2>
+            <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="grocery-catalog.html">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
+          </div>
+          <div class="col-lg-4 col-sm-d-none pt-3 pt-md-4">
+            <div class="bg-secondary p-5 text-center"><img class="d-block mb-4 mx-auto" src="{% static 'img\blog\banner-bg.jpg' %}" width="120" alt="YouTube">
+              <div class="d-flex justify-content-center align-items-center mb-4"><img class="me-2" src="{% static 'img/home/yt-subscribers.png' %}" width="126" alt="YouTube Subscribers"><span class="fs-sm">250k+</span></div><a class="btn btn-primary border-0 btn-sm mb-3" href="javascript:void(0)" style="background-color: #ff0000;"><i class="ci-add-user me-2"></i>Subscribe*</a>
+              <p class="fs-sm mb-0">*View latest gadgets reviews availables for purchase in our store.</p>
+            </div>
+          </div>
+          <section class="col-lg-8 col-sm-12 pt-3 pt-md-4">
+            
+            <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
+              <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
+                {% for air in air_condition %}
+                <div>
+                  <div class="card product-card card-static pb-3">
+                    <span class="round-r badge bg-danger rounded-pill badge-shadow">33% <br> off</span>
+                    {% if air.id %}
+                        <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in air.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
+                          <a href="{% url 'order:add_to_wishlist' store_id=air.id %}">
+                          {% if request.user in air.wishlisted_by.all %}
+                            <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                          {% else %}
+                            <i class="fa-regular fa-heart" style="color: #001d42;"></i>
+                          {% endif %}
+                          </a>
+                        </button>
+                      {% else %}
+                        <!-- Handle the case where p.id is empty or not valid -->
+                        <p>This product is not available.</p>
+                      {% endif %}
+                    <a class="card-img-top d-block overflow-hidden" href="{{ air.get_absolute_url }}"><img src="{{air.image.url}}" alt="Product"></a>
+                    <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
+                    <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="javascript:void(0)">{{air.vendor}}</a>
+                      <h3 class="product-title fs-sm text-truncate"><a href="{{ air.get_absolute_url }}">{{air.name}}</a></h3>
+                      <div class="product-price"><span class="text-accent">₹36,990.<small></small></span>
+                        <del class="fs-sm text-muted">₹{{air.get_original_price}}<small></small></del>
+                      </div>
+                    </div>
+                    <div class="product-floating-btn">
+                      <button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                <!-- Product-->
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>  
       <!-- Product widgets-->
       <section class="container pb-4 pb-md-5">
         <div class="row">
@@ -403,7 +516,7 @@
         </div>
       </section>
       <!-- YouTube feed-->
-      <section class="container pb-5 mb-md-3">
+      <section class="container pb-5 mb-md-3 d-none">
         <div class="border rounded-3 p-3">
           <div class="row">
             <div class="col-md-4 mb-3 mb-md-0">
@@ -449,6 +562,5 @@
               </div></a></div>
         </div>
       </section>
-    </main>
    
     {% endblock  %}

@@ -20753,7 +20753,8 @@ html:not([dir=rtl]) .range-slider-ui.noUi-horizontal .noUi-handle {
 
 .product-card {
     padding-bottom: 1.25rem;
-    border: 0;
+    border: 0px solid;
+    box-shadow: 0px 1px 1px salmon;
     transition: all .15s ease-in-out;
     
 }
@@ -21878,4 +21879,6 @@ html:not([dir=rtl]) .range-slider-ui.noUi-horizontal .noUi-handle {
 .text-nowrap a span {
     font-size: 30px;
 }
+
+
 

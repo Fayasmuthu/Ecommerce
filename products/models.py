@@ -106,7 +106,7 @@ class Store(models.Model):
     vendor =models.CharField(max_length=100)
     image =models.ImageField(upload_to='store/img')
     available=models.BooleanField(default=True)
-    brand =models.ForeignKey(Brand,on_delete=models.CASCADE,related_name='brand')
+    brand =models.ForeignKey(Brand,on_delete=models.CASCADE,related_name='brand', null=True, blank=True)
     rating =models.PositiveIntegerField(
         validators=[MaxValueValidator(5)],default=5,verbose_name='product Rating (max:5)'
     )

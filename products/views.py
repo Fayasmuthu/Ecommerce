@@ -20,11 +20,13 @@ def index(request):
     group_category =Groupcategory.objects.all()
     categories = Category.objects.all()  
     subcategory = Subcategory.objects.all()
+    store = Store.objects.all()
     offer_sale =Store.objects.filter(is_laptop=True)[:8]
     led_tv =Store.objects.filter(is_led_tv=True)[:8]
     kitchen_appliance =Store.objects.filter(is_kitchen_appliances=True)[:8]
     refrigentor =Store.objects.filter(is_home_appliances=True)[:8]
     air_condition =Store.objects.filter(is_air_conditions=True)[:8]
+    computer_a_printers =Store.objects.filter(is_computer_a_printers=True)[:8]
     hero=Hero.objects.all()
     offer_counter =Store.objects.filter(is_offer_counter=True)[:8]
     best_seller =Store.objects.filter(is_best_seller=True)[:8]
@@ -32,10 +34,16 @@ def index(request):
     top_rated =Store.objects.filter(is_top_rated=True)[:8]
 
     category=request.GET.get('category')
+    q= request.GET.get('q')
     heros=request.GET.get('hero')
     
     if category:
         store = store.filter(subcategory__category__slug=category)
+
+    if q :
+        instance = Subcategory.objects.get(slug=q)
+        store = store.filter(subcategory=instance)[:8]
+
 
     if heros:
        hero =hero.filter(hero__store__slug=heros)
@@ -54,6 +62,7 @@ def index(request):
         'kitchen_appliance':kitchen_appliance,
         'refrigentor':refrigentor,
         'air_condition':air_condition,
+        'computer_a_printers':computer_a_printers,
         'cart_items': cart_items,
         'cart_total_amount': cart_total_amount,
         'hero':hero,
@@ -204,6 +213,18 @@ def filter_data(request):
         course = Store.objects.all().order_by('-id')
 
     t = render_to_string('ajax/store.html', {'course': course})
+    return JsonResponse({'data': t})
+
+def filter_data_list(request):
+    selected_brand = request.GET.getlist('brands[]')
+    print("Selected Brands:", selected_brand)  # Add this line for debugging
+
+    if selected_brand:
+        course = Store.objects.filter(brand__id__in = selected_brand).order_by('-id')
+    else:
+        course = Store.objects.all().order_by('-id')
+
+    t = render_to_string('ajax/store_list.html', {'course': course})
     return JsonResponse({'data': t})
 
 

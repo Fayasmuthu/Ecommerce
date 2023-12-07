@@ -98,7 +98,7 @@
                     {% for b in brands %}
                     <li class="widget-filter-item d-flex justify-content-between align-items-center mb-1">
                       <div class="form-check">
-                        <input class="form-check-input filter-checkbox" type="checkbox" id="adidas-{{b.id}}" data-filter="brands" value="{{b.id}}">
+                        <input class="form-check-input filter-checkbox" type="checkbox" id="adidas-{{b.id}}"  data-filter="brands" value="{{b.id}}">
 
                         <label class="form-check-label widget-filter-item-text" for="adidas-{{b.id}}">{{b.name}}</label>
                       </div><span class="fs-xs text-muted">{{ b.store_count }}</span>
@@ -221,4 +221,54 @@
         </div>
       </div>
     </main>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".filter-checkbox").on('click', function () {
+            var filter_object = {};
+            $(".filter-checkbox").each(function (index, ele) {
+                var filter_value = $(this).val();
+                var filter_key = $(this).data('filter');
+                filter_object[filter_key] = Array.from(document.querySelectorAll('input[data-filter=' + filter_key + ']:checked')).map(function (el) {
+                    return el.value;
+                });
+            });
+
+            // AJAX request to filter stores
+            $.ajax({
+                url: '{% url "products:filter-data-list" %}', // URL for 'store_list' filtering
+                data: filter_object,
+                dataType: 'json',
+                success: function (res) {
+                    // Update the HTML content with filtered data
+                    $("#filteredStore").html(res.data);
+                }
+            });
+        });
+    });
+</script>
+<script>
+  $(document).ready(function () {
+      $(".filter-checkbox").on('click', function () {
+          var filter_object = {};
+          $(".filter-checkbox").each(function (index,ele) {
+              var filter_value = $(this).val();
+              var filter_key = $(this).data('filter');
+              console.log(filter_key, filter_value);
+              filter_object[filter_key] = Array.from(document.querySelectorAll('input[data-filter=' + filter_key + ']:checked')).map(function (el) {
+                  return el.value;
+              });
+          });
+      
+          $.ajax({
+            url: '{% url "products:filter-data-list" %}',
+            data: filter_object,
+            dataType: 'json',
+            success: function (res) {
+                $("#filteredStore").html(res.data);
+            }
+        });
+      });
+  });
+</script>
     {% endblock  %}
