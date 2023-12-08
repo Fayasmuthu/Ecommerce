@@ -21882,3 +21882,17 @@ html:not([dir=rtl]) .range-slider-ui.noUi-horizontal .noUi-handle {
 
 
 
+@media(max-width: 770px) {
+    .cd .col-lg-3{
+        display: none;
+    }
+}
+
+.nav-item.current .nav-link {
+    /* Your styling for the current navigation item */
+    /* For example, changing background color and text color */
+
+    /* color: white !important;  */
+    /* Add any other styles as needed */
+    color: var(--cz-primary);
+}

@@ -11,11 +11,14 @@ from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count
+from order.models import UserProfile
+from django.shortcuts import get_object_or_404
 
 
 
 # Create your views here.
 def index(request):
+    profile = UserProfile.objects.get(user=request.user)
     main_category = Maincategory.objects.all()
     group_category =Groupcategory.objects.all()
     categories = Category.objects.all()  
@@ -53,6 +56,7 @@ def index(request):
     print("Cart Total Amount:", cart_total_amount)
 
     context ={
+        'profile':profile,
         'main_category':main_category,
         'group_category':group_category,
         'categories': categories, 
@@ -77,6 +81,7 @@ def index(request):
 
 
 def shop(request):
+    profile = UserProfile.objects.get(user=request.user)
     main_category = Maincategory.objects.all()
     group_category =Groupcategory.objects.all()
     categories = Category.objects.all()  
@@ -120,6 +125,7 @@ def shop(request):
      #__________________-END PAGINATION-_______________________
 
     context ={
+        'profile':profile,
         'main_category':main_category,
         'group_category':group_category,
         'categories': categories,
@@ -140,6 +146,7 @@ def shop(request):
     return render(request, "products/details/shop.html",context)
 
 def shop_list(request):
+    profile = UserProfile.objects.get(user=request.user)
     main_category = Maincategory.objects.all()
     group_category =Groupcategory.objects.all()
     categories = Category.objects.all()  
@@ -185,6 +192,7 @@ def shop_list(request):
     
 
     context ={
+        'profile':profile,
         'main_category':main_category,
         'group_category':group_category,
         'categories': categories,
@@ -278,6 +286,11 @@ class products_detailsViews(DetailView):
         context['star_counts'] = star_counts
         context['stars'] = range(1, 6) 
         context['overall_rating'] = overall_rating
+        context['profile']=UserProfile
+
+        user_profile = get_object_or_404(UserProfile, user=self.request.user)
+        context['profile'] = user_profile
+
         return context
     
     def post(self,request,*args, **kwargs):

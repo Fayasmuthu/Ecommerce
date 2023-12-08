@@ -403,20 +403,20 @@
         </div>
       </section>
       {% endif %}
-      <section class="container d-none">
-        <div class="row">
+      <section class="container ">
+        <div class="row cd">
           <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
-            <h2 class="h3 mb-0 pt-3 me-3">Discounted products</h2>
+            <h2 class="h3 mb-0 pt-3 me-3">Air Conditions products</h2>
             <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="grocery-catalog.html">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
           </div>
-          <div class="col-lg-4 col-sm-d-none pt-3 pt-md-4">
-            <div class="bg-secondary p-5 text-center"><img class="d-block mb-4 mx-auto" src="{% static 'img\blog\banner-bg.jpg' %}" width="120" alt="YouTube">
-              <div class="d-flex justify-content-center align-items-center mb-4"><img class="me-2" src="{% static 'img/home/yt-subscribers.png' %}" width="126" alt="YouTube Subscribers"><span class="fs-sm">250k+</span></div><a class="btn btn-primary border-0 btn-sm mb-3" href="javascript:void(0)" style="background-color: #ff0000;"><i class="ci-add-user me-2"></i>Subscribe*</a>
-              <p class="fs-sm mb-0">*View latest gadgets reviews availables for purchase in our store.</p>
+          <div class="col-lg-3 col-md-4 pt-3 pt-md-4">
+            <div>
+              <div class="card bg-secondary product-card card-static pb-3">
+                <a class="card-img-top d-block overflow-hidden" href="{{ air.get_absolute_url }}"><img src="{% static 'img\offer.jpg' %}" alt="Product"></a>
+              </div>
             </div>
           </div>
-          <section class="col-lg-8 col-sm-12 pt-3 pt-md-4">
-            
+          <section class="col-lg-9 col-md-8 pt-3 pt-md-4"> 
             <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
               <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
                 {% for air in air_condition %}

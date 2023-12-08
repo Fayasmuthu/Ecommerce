@@ -1,12 +1,29 @@
-{% extends "registration/registration_base.html" %}
+{% extends 'registration/registration_base.html' %}
 {% load i18n crispy_forms_tags %}
+{% load static %}
 
-{% block title %}{% trans "Logged out" %}{% endblock %}
+{% block title %}
+  {% trans 'Logged out' %}
+{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="mx-auto">
-        <p>{% trans "Successfully logged out" %}.</p>
-    </div>  
-</div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6  my-auto">
+        <div class="card border-0 shadow ">
+          <div class="card-body ">
+              <p >
+                  {% trans 'Successfully logged out' %}.
+                  <h2 class="h4 mb-1"><a href="{% url 'auth_login' %}">Sign in</a></h2>
+              
+            </p>
+          </div>
+        </div>
+      </div>
+    <div class="col-md-6 bg-position-center bg-size-cover bg-secondary order-md-2">
+        <img src="{% static 'img\Fill out-bro.svg' %}" height="10px" alt="">
+    </div>
+        
+    </div>
+  </div>
 {% endblock %}

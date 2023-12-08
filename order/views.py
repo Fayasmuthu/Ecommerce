@@ -45,6 +45,7 @@ def account_order(request):
     orders = Orders.objects.filter(user=user)
     order_items = OrderItem.objects.filter(orders__in=orders)
     order_count = orders.count()
+    profile = UserProfile.objects.get(user=request.user)
 
 
 
@@ -66,6 +67,7 @@ def account_order(request):
         'order_items': order_items,
         'order_items': paginated_order_items,
         'order_count': order_count,
+        'profile':profile
 
     }
     return render(request, "account/account-orders.html",context)
@@ -86,9 +88,13 @@ def add_to_wishlist(request, store_id):
 def wishlist_page(request):
     wishlist_items = request.user.wishlist.all()
     wishlist_count = request.user.wishlist.count()
+    profile = UserProfile.objects.get(user=request.user)
+
     context = {
         'wishlist_items': wishlist_items,
         'wishlist_count': wishlist_count,
+        'profile':profile
+
     }
     return render(request, 'account/wishlist.html',context)
 
@@ -135,6 +141,7 @@ def cart_clear(request):
 
 @login_required
 def cart_detail(request):
+    profile = UserProfile.objects.get(user=request.user)
     cart_items = request.session.get('cart', {})
     
     # Calculate total cart amount
@@ -143,12 +150,14 @@ def cart_detail(request):
     context = {
         'cart_items': cart_items,
         'cart_total_amount': cart_total_amount,
+        'profile':profile
     }
     return render(request, 'cart/cart.html',context)
 
 
 @login_required
 def checkout_detail(request):
+    profile = UserProfile.objects.get(user=request.user)
     cart_items = request.session.get('cart', {})
 
     cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
@@ -157,12 +166,15 @@ def checkout_detail(request):
     context = {
         'cart_items': cart_items,
         'cart_total_amount': cart_total_amount,
+        'profile':profile
     }
     return render(request, 'cart/checkout-details.html',context)
 
 
 @login_required
 def checkout_shipping(request):
+    profile = UserProfile.objects.get(user=request.user)
+
     if request.method == "POST":
         # Fetch user and cart information
         user_id = request.session.get('_auth_user_id')
@@ -218,11 +230,12 @@ def checkout_shipping(request):
 
         # Redirect to checkout payment page or any other relevant page
         return redirect('order:checkout_payment')
-    
-    return render(request, 'cart/checkout-shipping.html')
+           
+    return render(request, 'cart/checkout-shipping.html',{'profile':profile})
 
 
 def checkout_payment(request):
+    profile = UserProfile.objects.get(user=request.user)
     cart_items = request.session.get('cart', {})
     
     # Calculate total cart amount
@@ -233,11 +246,13 @@ def checkout_payment(request):
     context = {
         'cart_items': cart_items,
         'cart_total_amount': cart_total_amount,
+        'profile':profile
     }
     return render(request, 'cart/checkout-payment.html',context)
 
 
 def checkout_review(request):
+    profile = UserProfile.objects.get(user=request.user)
     cart_items = request.session.get('cart', {})
     
     # Calculate total cart amount
@@ -248,6 +263,8 @@ def checkout_review(request):
     context = {
         'cart_items': cart_items,
         'cart_total_amount': cart_total_amount,
+        'profile':profile
+
     }
     return render(request, 'cart/checkout-review.html',context)
 
