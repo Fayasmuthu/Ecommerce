@@ -8,7 +8,11 @@ from . models import Orders,OrderItem,UserProfile
 from .forms import UserProfileForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils import timezone
-
+from django.views import View
+import stripe
+from django.urls import reverse
+from django.conf import settings
+from django.views.generic import TemplateView
 
 # Create your views here.
 def index(request):
@@ -227,9 +231,9 @@ def checkout_shipping(request):
 
         # Clear the cart after the order is placed
         request.session['cart'] = {}
-
-        # Redirect to checkout payment page or any other relevant page
-        return redirect('order:checkout_payment')
+        # order_id = order.id
+        # # Redirect to checkout payment page or any other relevant page
+        # return redirect(reverse('order:create-checkout-session', kwargs={'pk': order_id}))
            
     return render(request, 'cart/checkout-shipping.html',{'profile':profile})
 
@@ -242,11 +246,13 @@ def checkout_payment(request):
     cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
     
     print("Cart Total Amount:", cart_total_amount)  # Add this line for debugging
-
+    pk = 123
+    print("PK Value:", pk)
     context = {
         'cart_items': cart_items,
         'cart_total_amount': cart_total_amount,
-        'profile':profile
+        'profile':profile,
+        'pk': pk 
     }
     return render(request, 'cart/checkout-payment.html',context)
 
@@ -274,3 +280,40 @@ def checkout_complete(request):
 
 
 
+
+
+class CreateStripeCheckoutSessionView(View):
+    def post(self, request, *args, **kwargs):
+        cart_items = request.session.get('cart', {})
+        cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            line_items=[
+                {
+                    "price_data": {
+                        "currency": "usd",
+                        "unit_amount": int(cart_total_amount * 100),  # Amount in cents
+                        "product_data": {
+                            "name": "Your Product Name",
+                            "description": "Product Description",
+                        },
+                    },
+                    "quantity": 1,
+                },
+            ],
+            mode="payment",
+            success_url = reverse('success'),
+            cancel_url=request.build_absolute_uri(reverse("payment_cancel")),
+        )
+        return redirect(checkout_session.url)
+    
+class SuccessView(TemplateView):
+    template_name = 'cart/success.html'  # Replace 'success.html' with your success template
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add any additional context data here if needed
+        return context
+
+class CancelView(TemplateView):
+    template_name = "cart/cancel.html"

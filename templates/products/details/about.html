@@ -58,19 +58,24 @@
             <div class="mx-auto py-lg-5" style="max-width: 35rem;">
               <h2 class="h3 mb-2">We are hiring new talents</h2>
               <p class="fs-sm text-muted pb-2">If you want to be part of our team please submit you CV using the form below:</p>
-              <form class="needs-validation row g-4" method="post" novalidate>
-                <div class="col-sm-6">
-                  <input class="form-control" type="text" placeholder="Your name" required>
+              <form class="needs-validation row g-4" method="post" novalidate enctype="multipart/form-data">
+                {% csrf_token %}
+                {% comment %} <div class="col-sm-6">
+                  {{ form.name }}
+                  {{ form.name.errors }}
                 </div>
                 <div class="col-sm-6">
-                  <input class="form-control" type="email" placeholder="Your email" required>
+                  {{ form.email }}
+                  {{ form.email.errors }}
                 </div>
                 <div class="col-12">
-                  <textarea class="form-control" rows="4" placeholder="Message" required></textarea>
+                  {{ form.message }}
+                  {{ form.message.errors }}
                 </div>
                 <div class="col-12">
-                  <input class="form-control" type="file" required>
-                </div>
+                  {{ form.cv }}
+                </div> {% endcomment %}
+                {{ form.as_p }}
                 <div class="col-12">
                   <button class="btn btn-info btn-shadow" type="submit">Submit your CV</button>
                 </div>

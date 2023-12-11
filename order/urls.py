@@ -1,6 +1,9 @@
 from django.urls import path
 from . import views
 from django.views.generic import TemplateView
+from .views import CreateStripeCheckoutSessionView
+from .views import SuccessView, CancelView
+
 
 app_name = "order"
 
@@ -26,4 +29,13 @@ urlpatterns = [
     path('account/order/',views.account_order,name='account_order'),
     path('add_to_wishlist/<int:store_id>/', views.add_to_wishlist, name='add_to_wishlist'),
     path('wishlist/', views.wishlist_page, name='wishlist_page'), 
+
+    # Stripe
+     path(
+        "create-checkout-session/<int:pk>/",
+        CreateStripeCheckoutSessionView.as_view(),
+        name="create-checkout-session",
+    ),
+    path('success/', SuccessView.as_view(), name='success'),
+    path('cancel/', CancelView.as_view(), name='cancel'),
 ]

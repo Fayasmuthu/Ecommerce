@@ -221,7 +221,7 @@
                 <li class="page-item">
                   <a class="page-link" href="?page={{stories.next_page_number}}" aria-label="Next">Next<i class="ci-arrow-right ms-2"></i></a>
                 </li>
-                {% comment %} <li class="page-item"><a class="page-link" href="?page={{stories.paginator.num_pages}}">Last</a></li> {% endcomment %}
+                <li class="page-item d-none"><a class="page-link" href="?page={{stories.paginator.num_pages}}">Last</a></li> 
               {% endif %}
               </ul>
             </nav>

@@ -1,0 +1,14 @@
+{% extends "partials/base_shop.html" %}
+{% load static %}
+{% load cart_tag %}
+{% block title %} Success {% endblock title%} 
+
+{% block content_detail %}
+<div class="alert alert-success" role="alert">
+  Thanks for purchasing our product
+  <a
+      href="{% url 'order:checkout_payment' %}"
+      >Go to Products</a
+    >
+</div>
+{% endblock %}
