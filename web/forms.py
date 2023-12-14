@@ -16,7 +16,7 @@ class ApplicantForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'class':"form-control" ,'placeholder':'Your name','required': True}),
             'email':forms.EmailInput(attrs={'class':"form-control" ,'placeholder':'Your email','required': True}),
-            'message':forms.TextInput(attrs={'rows': 4, 'class':"form-control" ,'placeholder':'Message','required': True}),
+            'message':forms.Textarea(attrs={'rows': 6, 'class':"form-control" ,'placeholder':'Message','required': True}),
             'cv': forms.FileInput(attrs={'class':"form-control" ,'type':"file"}),
         }
 

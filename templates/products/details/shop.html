@@ -169,7 +169,7 @@
                     <img src="{{i.image.url}}" alt="" class="productssale" >    
                   {% endfor %}
                   <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="javascript:void(0)"></a>
-                        <h3 class="product-title fs-sm"><a href="shop-single-v1.html">{{store.name}}</a></h3>
+                        <h3 class="product-title fs-sm"><a href="shop-single-v1.html">{{store.name|truncatechars:20}}</a></h3>
                         <div class="d-flex justify-content-between">
                           <div class="product-price"><span class="text-accent">${% discount_calculation  store.get_original_price store.get_price %}.<small>50</small></span>
                             <del class="fs-sm text-muted">${{store.get_original_price}}.<small>50</small></del>

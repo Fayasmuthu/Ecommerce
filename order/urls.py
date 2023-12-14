@@ -32,7 +32,7 @@ urlpatterns = [
 
     # Stripe
      path(
-        "create-checkout-session/<int:pk>/",
+        "create-checkout-session/<int:store_id>/",
         CreateStripeCheckoutSessionView.as_view(),
         name="create-checkout-session",
     ),

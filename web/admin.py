@@ -8,4 +8,8 @@ from .models import ContactMessage,Applicant
 class ContactMessageAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'phone', 'subject', 'message')
 
-admin.site.register(Applicant)
+
+class ApplicantAdmin(admin.ModelAdmin):
+    list_display = ['name', 'email']  # Customize fields to display in the admin list view
+
+admin.site.register(Applicant, ApplicantAdmin)

@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+
 
 # Create your models here.
 from django.db import models
@@ -16,9 +18,14 @@ class ContactMessage(models.Model):
 
 class Applicant(models.Model):
     name = models.CharField(max_length=100)
-    email = models.EmailField()
+    email = models.EmailField(max_length=128,blank=True,null=True)
     message = models.TextField()
     cv = models.FileField(upload_to='cv_uploads/')
 
+    class Meta:
+        verbose_name = ('About')
+        verbose_name_plural = ('About')
+
+
     def __str__(self):
-        return self.name
+        return str("Change Your About")

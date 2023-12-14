@@ -233,7 +233,7 @@ def checkout_shipping(request):
         request.session['cart'] = {}
         # order_id = order.id
         # # Redirect to checkout payment page or any other relevant page
-        # return redirect(reverse('order:create-checkout-session', kwargs={'pk': order_id}))
+        # return redirect(reverse('order:create-checkout-session'}))
            
     return render(request, 'cart/checkout-shipping.html',{'profile':profile})
 
@@ -281,31 +281,43 @@ def checkout_complete(request):
 
 
 
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 class CreateStripeCheckoutSessionView(View):
+    """
+    Create a checkout session and redirect the user to Stripe's checkout page
+    """
+
     def post(self, request, *args, **kwargs):
-        cart_items = request.session.get('cart', {})
-        cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
+        price1 = Store.objects.all()
+        
+        for store in price1:
+            price2=store.price
+            name=store.name
+        
+
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=["card"],
             line_items=[
                 {
                     "price_data": {
-                        "currency": "usd",
-                        "unit_amount": int(cart_total_amount * 100),  # Amount in cents
-                        "product_data": {
-                            "name": "Your Product Name",
-                            "description": "Product Description",
-                        },
+                        "currency": "inr",
+                        "unit_amount": int(price2) * 100,
+                        "product_data":{
+                            "name":name
+                        }
+                        
                     },
                     "quantity": 1,
-                },
+                }
             ],
+           
             mode="payment",
-            success_url = reverse('success'),
-            cancel_url=request.build_absolute_uri(reverse("payment_cancel")),
+            success_url=settings.PAYMENT_SUCCESS_URL,
+            cancel_url=settings.PAYMENT_CANCEL_URL,
         )
         return redirect(checkout_session.url)
+    
     
 class SuccessView(TemplateView):
     template_name = 'cart/success.html'  # Replace 'success.html' with your success template

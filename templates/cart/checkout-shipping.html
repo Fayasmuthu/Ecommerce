@@ -1,6 +1,7 @@
 {% extends "partials/base_shop.html" %}
 {% load static %}
 {% load cart_tag %}
+<script src="https://js.stripe.com/v3/"></script> 
 {% block content_detail %}
       <!-- Page Title-->
       <div class="page-title-overlap bg-dark pt-4">
@@ -21,6 +22,8 @@
         </div>
       </div>
       <div class="container pb-5 mb-2 mb-md-4">
+        <form action="" method="post" >
+          {% csrf_token %}
         <div class="row">
           <section class="col-lg-8">
             <!-- Steps-->
@@ -154,6 +157,7 @@
             <div class="d-none d-lg-flex pt-4">
               <div class="w-50 pe-3"><a class="btn btn-secondary d-block w-100" href="{% url "order:checkout_detail" %}"><i class="ci-arrow-left mt-sm-0 me-1"></i><span class="d-none d-sm-inline">Back to Adresses</span><span class="d-inline d-sm-none">Back</span></a></div>
               <div class="w-50 ps-2"><a class="btn btn-primary d-block w-100" href="{% url "order:checkout_payment" %}"><span class="d-none d-sm-inline">Proceed to Payment</span><span class="d-inline d-sm-none">Next</span><i class="ci-arrow-right mt-sm-0 ms-1"></i></a></div>
+              <button class="d-none">Pay</button>
             </div>
           </section>
           <!-- Sidebar-->
@@ -175,10 +179,10 @@
                 <ul class="list-unstyled fs-sm pb-2 border-bottom">
                   <li class="d-flex justify-content-between align-items-center"><span class="me-2">Subtotal:</span><span class="text-end">${{cart_total_amount}}<small>00</small></span></li>
                   <li class="d-flex justify-content-between align-items-center"><span class="me-2">Shipping:</span><span class="text-end">—</span></li>
-                  <li class="d-flex justify-content-between align-items-center"><span class="me-2">Taxes:</span><span class="text-end">$9.<small>50</small></span></li>
+                  <li class="d-flex justify-content-between align-items-center"><span class="me-2">Taxes:</span><span class="text-end">$9<small></small></span></li>
                   <li class="d-flex justify-content-between align-items-center"><span class="me-2">Discount:</span><span class="text-end">—</span></li>
                 </ul>
-                <h3 class="fw-normal text-center my-4">$274.<small>50</small></h3>
+                <h3 class="fw-normal text-center my-4">${{cart_total_amount|add:9}}<small></small></h3>
                 <form class="needs-validation" method="post" novalidate>
                   <div class="mb-3">
                     <input class="form-control" type="text" placeholder="Promo code" required>
@@ -186,6 +190,7 @@
                   </div>
                   <button class="btn btn-outline-primary d-block w-100" type="submit">Apply promo code</button>
                 </form>
+                
               </div>
             </div>
           </aside>
@@ -195,10 +200,14 @@
           <div class="col-lg-8">
             <div class="d-flex pt-4 mt-3">
               <div class="w-50 pe-3"><a class="btn btn-secondary d-block w-100" href="{% url "order:checkout_detail" %}"><i class="ci-arrow-left mt-sm-0 me-1"></i><span class="d-none d-sm-inline">Back to Adresses</span><span class="d-inline d-sm-none">Back</span></a></div>
-              <div class="w-50 ps-2"><a class="btn btn-primary d-block w-100" href="{% url "order:checkout_payment" %}"><span class="d-none d-sm-inline">Proceed to Payment</span><span class="d-inline d-sm-none">Next</span><i class="ci-arrow-right mt-sm-0 ms-1"></i></a></div>
-            </div>
+              <div class="w-50 ps-2 d-none"><a class="btn btn-primary d-block w-100" href="{% url "order:checkout_payment" %}"><span class="d-none d-sm-inline">Proceed to Payment</span><span class="d-inline d-sm-none">Next</span><i class="ci-arrow-right mt-sm-0 ms-1"></i></a></div>
+            
+            <button>Pay</button>
+          </div>
           </div>
         </div>
+        
+      </form>
       </div>
     </main>
     {% endblock  %}

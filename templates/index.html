@@ -116,246 +116,239 @@
       </section>
       <!-- ⚡Month refrigatory-->
       {% if refrigentor %}
-      <section class="container pt-2 mb-2 d-none">
-        <!-- Heading-->
-        <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
-          <h2 class="h3 mb-0 pt-3 me-2 ">⚡Month BIG SALE⚡</h2>
-          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="{% url "products:shop" %}?q={{ refrigentor.0.subcategory.slug }}">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
-        </div>
-        <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
-          <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
-            <!-- Product-->
-            {% for refr in refrigentor %}
-            <div>
-              <div class="card product-card card-static pb-3">
-                <span class="round-r badge bg-danger rounded-pill badge-shadow">36% <br> off</span>
-                {% if refr.id %}
-                    <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in offer.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
-                      <a href="{% url 'order:add_to_wishlist' store_id=refr.id %}">
-                      {% if request.user in refr.wishlisted_by.all %}
-                        <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
-                      {% else %}
-                        <i class="fa-regular fa-heart" style="color: #001d42;"></i>
-                      {% endif %}
-                      </a>
-                    </button>
-                  {% else %}
-                    <!-- Handle the case where p.id is empty or not valid -->
-                    <p>This product is not available.</p>
-                  {% endif %}
-                <a class="card-img-top d-block overflow-hidden" href="{{ refr.get_absolute_url }}"><img src="{{refr.image.url}}" alt="Product"></a>
-                {% comment %} <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" > {% endcomment %}
-                <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1 " href="#">{{refr.vendor}}</a>
-                  <h3 class="product-title fs-sm text-truncate"><a href="{{ refr.get_absolute_url }}">{{refr.name}}</a></h3>
-                  <div class="product-price"><span class="text-accent">₹17,590.<small>00</small></span>
-                    <del class="fs-sm text-muted">₹{{refr.get_original_price}}<small>00</small></del>
-                  </div>
-                </div>
-                <div class="product-floating-btn">
-                  <a href="{% url 'order:cart_add' refr.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
-
-                </div>
+      <section class="container ">
+        <div class="row cd">
+          <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
+            <h2 class="h3 mb-0 pt-3 me-3">Refrigentor products</h2>
+            <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="{% url "products:shop" %}?q={{ refrigentor.0.subcategory.slug }}">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
+          </div>
+          <div class="col-lg-3 col-md-4 pt-3 pt-md-4">
+            <div class="off-img">
+              <div class="card bg-secondary product-card card-static pb-3">
+                <a class="card-img-top d-block overflow-hidden" href="{{ refrigentor.get_absolute_url }}">
+                  <img src="{% static 'img\Off.jpg' %}" alt="Product"></a>
               </div>
             </div>
-            {% endfor %}
-            <!-- Product--> 
+          </div>
+          <section class="col-lg-9 col-md-8 pt-3 pt-md-4"> 
+            <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
+              <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
+                {% for refr in refrigentor %}
+                <div>
+                  <div class="card product-card card-static pb-3">
+                    <span class="round-r badge bg-danger rounded-pill badge-shadow">{{refr.get_price}}% <br> off</span>
+                    {% if refr.id %}
+                        <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in refr.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
+                          <a href="{% url 'order:add_to_wishlist' store_id=refr.id %}">
+                          {% if request.user in air.wishlisted_by.all %}
+                            <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                          {% else %}
+                            <i class="fa-regular fa-heart" style="color: #001d42;"></i>
+                          {% endif %}
+                          </a>
+                        </button>
+                      {% else %}
+                        <!-- Handle the case where p.id is empty or not valid -->
+                        <p>This product is not available.</p>
+                      {% endif %}
+                    <a class="card-img-top d-block overflow-hidden" href="{{ refr.get_absolute_url }}"><img src="{{refr.image.url}}" alt="Product"></a>
+                    <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
+                    <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="javascript:void(0)">{{refr.vendor}}</a>
+                      <h3 class="product-title fs-sm text-truncate"><a href="{{ refr.get_absolute_url }}">{{refr.name}}</a></h3>
+                      <div class="product-price"><span class="text-accent">₹<small></small></span>
+                        <del class="fs-sm text-muted">₹{{refr.get_original_price}}<small></small></del>
+                      </div>
+                    </div>
+                    <div class="product-floating-btn">
+                      <a href="{% url 'order:cart_add' refr.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                <!-- Product-->
+              </div>
+            </div>
+          </section>
         </div>
       </section> 
-      {% else %}
-      <!-- Add a message or alternative content for when there are no products in refrigentor -->
-      <p>No products available at the moment.</p>
       {% endif %}
+
       <!-- Laptop-->
       {% if offer_sale %}
-      <section class="container pt-2 mb-2 ">
-        <!-- Heading-->
-        <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
-          <h2 class="h3 mb-0 pt-3 me-2 ">LAPTOP</h2>
-          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="{% url "products:shop" %}?q={{ offer_sale.0.subcategory.slug }}">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
-        </div>
-        <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
-          <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
-            <!-- Product-->
-            {% for offer in offer_sale %}
-            <div>
-              <div class="card product-card card-static pb-3">
-                <span class="round-r badge bg-danger rounded-pill badge-shadow">30% <br> off</span>
-                {% if offer.id %}
-                    <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in offer.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
-                      <a href="{% url 'order:add_to_wishlist' store_id=offer.id %}">
-                      {% if request.user in offer.wishlisted_by.all %}
-                        <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
-                      {% else %}
-                        <i class="fa-regular fa-heart" style="color: #001d42;"></i>
-                      {% endif %}
-                      </a>
-                    </button>
-                  {% else %}
-                    <!-- Handle the case where p.id is empty or not valid -->
-                    <p>This product is not available.</p>
-                  {% endif %}
-                <a class="card-img-top d-block overflow-hidden" href="{{ offer.get_absolute_url }}"><img src="{{offer.image.url}}" alt="Product"></a>
-                {% for i in offer.get_offer_sale %}
-                <img src="{{i.image.url}}" alt="" class="productssale" >
-                {% endfor %}
-                <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="#">{{offer.vendor}}</a>
-                  <h3 class="product-title fs-sm text-truncate"><a href="{{ offer.get_absolute_url }}">{{offer.name}}</a></h3>
-                  <div class="product-price"><span class="text-accent">₹{{offer.get_price}}.<small>99</small></span>
-                    <del class="fs-sm text-muted">₹{{offer.get_original_price}}.<small>99</small></del>
-                  </div>
-                </div>
-                <div class="product-floating-btn">
-                  <a href="{% url 'order:cart_add' offer.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
-                </div>
+      <section class="container ">
+        <div class="row cd">
+          <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
+            <h2 class="h3 mb-0 pt-3 me-3">Laptop products</h2>
+            <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="{% url "products:shop" %}?q={{ offer_sale.0.subcategory.slug }}">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
+          </div>
+          <div class="col-lg-3 col-md-4 pt-3 pt-md-4">
+            <div class="off-img">
+              <div class="card bg-secondary product-card card-static pb-3">
+                <a class="card-img-top d-block overflow-hidden" href="{{ air.get_absolute_url }}"><img src="{% static 'img\Off.jpg' %}" alt="Product"></a>
               </div>
             </div>
-            {% endfor %}
           </div>
+          <section class="col-lg-9 col-md-8 pt-3 pt-md-4"> 
+            <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
+              <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
+                {% for offer in offer_sale %}
+                <div>
+                  <div class="card product-card card-static pb-3">
+                    <span class="round-r badge bg-danger rounded-pill badge-shadow">{{offer.get_price}}% <br> off</span>
+                    {% if offer.id %}
+                        <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in offer.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
+                          <a href="{% url 'order:add_to_wishlist' store_id=offer.id %}">
+                          {% if request.user in air.wishlisted_by.all %}
+                            <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                          {% else %}
+                            <i class="fa-regular fa-heart" style="color: #001d42;"></i>
+                          {% endif %}
+                          </a>
+                        </button>
+                      {% else %}
+                        <!-- Handle the case where p.id is empty or not valid -->
+                        <p>This product is not available.</p>
+                      {% endif %}
+                    <a class="card-img-top d-block overflow-hidden" href="{{ offer.get_absolute_url }}"><img src="{{offer.image.url}}" alt="Product"></a>
+                    <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
+                    <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="javascript:void(0)">{{offer.vendor}}</a>
+                      <h3 class="product-title fs-sm text-truncate"><a href="{{ offer.get_absolute_url }}">{{offer.name}}</a></h3>
+                      <div class="product-price"><span class="text-accent">₹<small></small></span>
+                        <del class="fs-sm text-muted">₹{{offer.get_original_price}}<small></small></del>
+                      </div>
+                    </div>
+                    <div class="product-floating-btn">
+                      <a href="{% url 'order:cart_add' offer.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                <!-- Product-->
+              </div>
+            </div>
+          </section>
         </div>
-      </section>
+      </section> 
       {% endif %}
       <!-- TV LCD-->
       {% if led_tv %}
-      <section class="container pt-2 mb-2">
-        <!-- Heading-->
-        <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
-          <h2 class="h3 mb-0 pt-3 me-2 ">LED TV</h2>
-          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="{% url "products:shop" %}?q={{ led_tv.0.subcategory.slug }}">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
-        </div>
-        <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
-          <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
-            <!-- Product-->
-            {% for led in led_tv %}
-            <div>
-              <div class="card product-card card-static pb-3">
-                <span class="round-r badge bg-danger rounded-pill badge-shadow">39% <br> off</span>
-                {% if led.id %}
-                    <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in led.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
-                      <a href="{% url 'order:add_to_wishlist' store_id=led.id %}">
-                      {% if request.user in led.wishlisted_by.all %}
-                        <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
-                      {% else %}
-                        <i class="fa-regular fa-heart" style="color: #001d42;"></i>
-                      {% endif %}
-                      </a>
-                    </button>
-                  {% else %}
-                    <!-- Handle the case where p.id is empty or not valid -->
-                    <p>This product is not available.</p>
-                  {% endif %}
-                <a class="card-img-top d-block overflow-hidden" href="{{ led.get_absolute_url }}"><img src="{{led.image.url}}" alt="Product"></a>
-                <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
-                <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="#">{{led.vendor}}</a>
-                  <h3 class="product-title fs-sm text-truncate"><a href="{{ led.get_absolute_url }}">{{led.name}}</a></h3>
-                  <div class="product-price"><span class="text-accent">₹13,990.<small>99</small></span>
-                    <del class="fs-sm text-muted"> ₹{{led.get_original_price}}<small>99</small></del>
-                  </div>
-                </div>
-                <div class="product-floating-btn">
-                  <a href="{% url 'order:cart_add' led.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
-                </div>
+      <section class="container ">
+        <div class="row cd">
+          <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
+            <h2 class="h3 mb-0 pt-3 me-3">LED TV products</h2>
+            <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="{% url "products:shop" %}?q={{ led_tv.0.subcategory.slug }}">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
+          </div>
+          <div class="col-lg-3 col-md-4 pt-3 pt-md-4">
+            <div class="off-img">
+              <div class="card bg-secondary product-card card-static pb-3">
+                <a class="card-img-top d-block overflow-hidden" href="{{ air.get_absolute_url }}"><img src="{% static 'img\Off.jpg' %}" alt="Product"></a>
               </div>
             </div>
-            {% endfor %}
-            <!-- Product--> 
           </div>
+          <section class="col-lg-9 col-md-8 pt-3 pt-md-4"> 
+            <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
+              <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
+                {% for led in led_tv %}
+                <div>
+                  <div class="card product-card card-static pb-3">
+                    <span class="round-r badge bg-danger rounded-pill badge-shadow">33% <br> off</span>
+                    {% if led.id %}
+                        <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in air.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
+                          <a href="{% url 'order:add_to_wishlist' store_id=led.id %}">
+                          {% if request.user in air.wishlisted_by.all %}
+                            <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                          {% else %}
+                            <i class="fa-regular fa-heart" style="color: #001d42;"></i>
+                          {% endif %}
+                          </a>
+                        </button>
+                      {% else %}
+                        <!-- Handle the case where p.id is empty or not valid -->
+                        <p>This product is not available.</p>
+                      {% endif %}
+                    <a class="card-img-top d-block overflow-hidden" href="{{ led.get_absolute_url }}"><img src="{{led.image.url}}" alt="Product"></a>
+                    <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
+                    <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="javascript:void(0)">{{led.vendor}}</a>
+                      <h3 class="product-title fs-sm text-truncate"><a href="{{ led.get_absolute_url }}">{{led.name}}</a></h3>
+                      <div class="product-price"><span class="text-accent">₹36,990.<small></small></span>
+                        <del class="fs-sm text-muted">₹{{led.get_original_price}}<small></small></del>
+                      </div>
+                    </div>
+                    <div class="product-floating-btn">
+                      <button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                <!-- Product-->
+              </div>
+            </div>
+          </section>
         </div>
-      </section>
+      </section> 
       {% endif %}
+      
+ 
       <!-- KITCHEN APPLIANCES-->
       {% if kitchen_appliance %}
-      <section class="container pt-2 mb-2">
-        <!-- Heading-->
-        <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
-          <h2 class="h3 mb-0 pt-3 me-2 ">KITCHEN APPLIANCES</h2>
-          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="{% url "products:shop" %}?q={{ kitchen_appliance.0.subcategory.slug }}">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
-        </div>
-        <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
-          <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
-            <!-- Product-->
-            {% for kitchen in kitchen_appliance %}
-            <div>
-              <div class="card product-card card-static pb-3">
-                <span class="round-r badge bg-danger rounded-pill badge-shadow">60% <br> off</span>
-                {% if kitchen.id %}
-                    <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in kitchen.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
-                      <a href="{% url 'order:add_to_wishlist' store_id=kitchen.id %}">
-                      {% if request.user in kitchen.wishlisted_by.all %}
-                        <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
-                      {% else %}
-                        <i class="fa-regular fa-heart" style="color: #001d42;"></i>
-                      {% endif %}
-                      </a>
-                    </button>
-                  {% else %}
-                    <!-- Handle the case where p.id is empty or not valid -->
-                    <p>This product is not available.</p>
-                  {% endif %}
-                <a class="card-img-top d-block overflow-hidden" href="{{ kitchen.get_absolute_url }}"><img src="{{kitchen.image.url}}" alt="Product"></a>
-                <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
-                <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="#">{{kitchen.vendor}}</a>
-                  <h3 class="product-title fs-sm text-truncate"><a href="{{ kitchen.get_absolute_url }}">{{kitchen.name}}</a></h3>
-                  <div class="product-price"><span class="text-accent"> ₹1,398.<small>99</small></span>
-                    <del class="fs-sm text-muted">₹{{kitchen.get_original_price}}<small>99</small></del>
-                  </div>
-                </div>
-                <div class="product-floating-btn">
-                  <a href="{% url 'order:cart_add' kitchen.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
-                </div>
+      <section class="container ">
+        <div class="row cd">
+          <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
+            <h2 class="h3 mb-0 pt-3 me-3">Air Conditions products</h2>
+            <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="{% url "products:shop" %}?q={{ kitchen_appliance.0.subcategory.slug }}">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
+          </div>
+          <div class="col-lg-3 col-md-4 pt-3 pt-md-4">
+            <div class="off-img">
+              <div class="card bg-secondary product-card card-static pb-3">
+                <a class="card-img-top d-block overflow-hidden" href="{{ air.get_absolute_url }}"><img src="{% static 'img\Off.jpg' %}" alt="Product"></a>
               </div>
             </div>
-            {% endfor %}
           </div>
+          <section class="col-lg-9 col-md-8 pt-3 pt-md-4"> 
+            <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
+              <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
+                {% for kitchen in kitchen_appliance %}
+                <div>
+                  <div class="card product-card card-static pb-3">
+                    <span class="round-r badge bg-danger rounded-pill badge-shadow">33% <br> off</span>
+                    {% if kitchen.id %}
+                        <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in air.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
+                          <a href="{% url 'order:add_to_wishlist' store_id=kitchen.id %}">
+                          {% if request.user in kitchen.wishlisted_by.all %}
+                            <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                          {% else %}
+                            <i class="fa-regular fa-heart" style="color: #001d42;"></i>
+                          {% endif %}
+                          </a>
+                        </button>
+                      {% else %}
+                        <!-- Handle the case where p.id is empty or not valid -->
+                        <p>This product is not available.</p>
+                      {% endif %}
+                    <a class="card-img-top d-block overflow-hidden" href="{{ kitchen.get_absolute_url }}"><img src="{{kitchen.image.url}}" alt="Product"></a>
+                    <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
+                    <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="javascript:void(0)">{{kitchen.vendor}}</a>
+                      <h3 class="product-title fs-sm text-truncate"><a href="{{ kitchen.get_absolute_url }}">{{kitchen.name}}</a></h3>
+                      <div class="product-price"><span class="text-accent">₹36,990.<small></small></span>
+                        <del class="fs-sm text-muted">₹{{kitchen.get_original_price}}<small></small></del>
+                      </div>
+                    </div>
+                    <div class="product-floating-btn">
+                      <a href="{% url 'order:cart_add' kitchen.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                <!-- Product-->
+              </div>
+            </div>
+          </section>
         </div>
-      </section>
+      </section> 
       {% endif %}
-      <!-- Air-conditions -->
-      {% if air_condition %}
-      <section class="container pt-2 mb-2 d-none">
-        <!-- Heading-->
-        <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
-          <h2 class="h3 mb-0 pt-3 me-2 ">AIR CONDITIONER</h2>
-          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="{% url "products:shop" %}?q={{ air_condition.0.subcategory.slug }}">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
-        </div>
-        <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
-          <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
-            <!-- Product-->
-            {% for air in air_condition %}
-            <div>
-              <div class="card product-card card-static pb-3">
-                <span class="round-r badge bg-danger rounded-pill badge-shadow">33% <br> off</span>
-                {% if air.id %}
-                    <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in air.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
-                      <a href="{% url 'order:add_to_wishlist' store_id=air.id %}">
-                      {% if request.user in air.wishlisted_by.all %}
-                        <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
-                      {% else %}
-                        <i class="fa-regular fa-heart" style="color: #001d42;"></i>
-                      {% endif %}
-                      </a>
-                    </button>
-                  {% else %}
-                    <!-- Handle the case where p.id is empty or not valid -->
-                    <p>This product is not available.</p>
-                  {% endif %}
-                <a class="card-img-top d-block overflow-hidden" href="{{ air.get_absolute_url }}"><img src="{{air.image.url}}" alt="Product"></a>
-                <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
-                <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="javascript:void(0)">{{air.vendor}}</a>
-                  <h3 class="product-title fs-sm text-truncate"><a href="{{ air.get_absolute_url }}">{{air.name}}</a></h3>
-                  <div class="product-price"><span class="text-accent">₹36,990.<small></small></span>
-                    <del class="fs-sm text-muted">₹{{air.get_original_price}}<small></small></del>
-                  </div>
-                </div>
-                <div class="product-floating-btn">
-                  <button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button>
-                </div>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-      </section>
-      {% endif %} 
+      
+
+
       <!-- Air-conditions -->
       {% if computer_a_printers %}
       <section class="container pt-2 mb-2">
@@ -410,9 +403,9 @@
             <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="grocery-catalog.html">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
           </div>
           <div class="col-lg-3 col-md-4 pt-3 pt-md-4">
-            <div>
+            <div class="off-img">
               <div class="card bg-secondary product-card card-static pb-3">
-                <a class="card-img-top d-block overflow-hidden" href="{{ air.get_absolute_url }}"><img src="{% static 'img\offer.jpg' %}" alt="Product"></a>
+                <a class="card-img-top d-block overflow-hidden" href="{{ air.get_absolute_url }}"><img src="{% static 'img\Off.jpg' %}" alt="Product"></a>
               </div>
             </div>
           </div>

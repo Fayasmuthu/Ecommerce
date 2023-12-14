@@ -4,32 +4,40 @@ from .forms import ContactForm,ApplicantForm
 from .models import ContactMessage
 from django.core.mail import send_mail
 from django.views import View
-
+from django.http import HttpResponse
+from django.http import JsonResponse
+import json
 
 
 # Create your views here.
-class AboutView(TemplateView):
-    template_name = 'products/details/about.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['is_about'] = True
-        return context
-
-    def get(self, request):
-        form = ApplicantForm()
-        context = self.get_context_data()
-        context['form'] = form
-        return render(request, self.template_name, context)
-
-    def post(self, request):
-        form = ApplicantForm(request.POST, request.FILES)
+def about(request):
+    form = ApplicantForm(request.POST or None, request.FILES or None)
+    if request.method == 'POST':
         if form.is_valid():
             form.save()
-            return redirect('success_page')  
-        context = self.get_context_data()
-        context['form'] = form
-        return render(request, self.template_name, context)
+            response_data = {
+                "status": "true",
+                "title": "Successfully Submitted",
+                "message": "Message successfully updated",
+            }
+        else:
+            print(form.errors)
+            response_data = {
+                "status": "false",
+                "title": "Form validation error",
+                'error':form.errors
+            }
+        return HttpResponse(
+            json.dumps(response_data), content_type="application/javascript"
+        )
+    else:
+        context = {
+            "is_about": True,
+            "form": form,
+        }
+
+    return render(request, 'products/details/about.html', context)
+
 
 def contact(request):
     context = {'is_contact': True} 
@@ -63,6 +71,21 @@ def contact(request):
 
             # Optionally, you can reset the form after successful submission
             form = ContactForm()
+            response_data = {
+                "status": "true",
+                "title": "Successfully Submitted",
+                "message": "Message successfully updated",
+            }
+        else:
+            print(form.errors)
+            response_data = {
+                "status": "false",
+                "title": "Form validation error",
+                'error':form.errors
+            }
+        return HttpResponse(
+            json.dumps(response_data), content_type="application/javascript"
+        )
 
     else:
         form = ContactForm()

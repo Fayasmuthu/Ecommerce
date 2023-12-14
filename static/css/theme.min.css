@@ -1281,7 +1281,8 @@ progress {
 
     .col-md-4 {
         flex: 0 0 auto;
-        width: 33.33333333%
+        /* width: 33.33333333% */
+        width: 25%;
     }
 
     .col-md-5 {
@@ -1509,7 +1510,7 @@ progress {
     }
 
     .col-lg-3 {
-        flex: 0 0 auto;
+        flex:1;
         width: 25%
     }
 
@@ -5029,7 +5030,7 @@ fieldset:disabled .btn {
     --cz-card-cap-color: ;
     --cz-card-height: ;
     --cz-card-color: ;
-    --cz-card-bg: #fff;
+    --cz-card-bg: #ffffff;
     --cz-card-img-overlay-padding: 1rem;
     --cz-card-group-margin: 0.9375rem;
     position: relative;
@@ -9519,7 +9520,7 @@ fieldset:disabled .btn {
 }
 
 .pb-3 {
-    padding-bottom: 1rem !important
+    padding-bottom: 0rem !important
 }
 
 .pb-4 {
@@ -9647,7 +9648,7 @@ fieldset:disabled .btn {
 }
 
 .fs-sm {
-    font-size: 0.875rem !important
+    font-size: 0.6125rem !important
 }
 
 .fs-ms {
@@ -9766,7 +9767,9 @@ fieldset:disabled .btn {
 
 .text-accent {
     --cz-text-opacity: 1;
+    font-size: 12px;
     color: rgba(var(--cz-accent-rgb), var(--cz-text-opacity)) !important
+    
 }
 
 .text-secondary {
@@ -9821,7 +9824,9 @@ fieldset:disabled .btn {
 
 .text-muted {
     --cz-text-opacity: 1;
+    font-size: 8px;
     color: #7d879c !important
+    
 }
 
 .text-heading {
@@ -20797,15 +20802,15 @@ html:not([dir=rtl]) .range-slider-ui.noUi-horizontal .noUi-handle {
     position: relative;
     background-color: #fff;
     z-index: 2;
-    border-radius: 10px;
+    border-radius: 0px 0px 10px 10px;
 }
 
 .product-card .card-body-hidden {
     position: absolute;
     left: 0;
-    top: 100%;
+    top: 50%;
     width: 100%;
-    margin-top: -1.25rem;
+    margin-top: 1.5rem;
     transition: all .15s ease-in-out;
     border-radius: .4375rem;
     border-top-left-radius: 0;
@@ -20813,7 +20818,7 @@ html:not([dir=rtl]) .range-slider-ui.noUi-horizontal .noUi-handle {
     background-color: #fff;
     opacity: 0;
     visibility: hidden;
-    z-index: 1
+    z-index: 3
 }
 
 @media(min-width: 500px) {
@@ -20989,9 +20994,9 @@ html:not([dir=rtl]) .range-slider-ui.noUi-horizontal .noUi-handle {
 
 .star-rating .star-rating-icon {
     display: inline-block;
-    margin-right: .1875rem;
+    margin-right: .175rem;
     color: #aeb4be;
-    font-size: .75rem;
+    font-size: .50rem;
     vertical-align: middle
 }
 
@@ -21882,7 +21887,7 @@ html:not([dir=rtl]) .range-slider-ui.noUi-horizontal .noUi-handle {
 
 
 
-@media(max-width: 770px) {
+@media(max-width: 767px) {
     .cd .col-lg-3{
         display: none;
     }
@@ -21895,4 +21900,26 @@ html:not([dir=rtl]) .range-slider-ui.noUi-horizontal .noUi-handle {
     /* color: white !important;  */
     /* Add any other styles as needed */
     color: var(--cz-primary);
+}
+
+
+@media(min-width: 1000px) {
+    .fs-sm {
+        font-size: 0.8125rem !important
+    }
+    
+}
+@media(max-width: 800px) {
+    .fs-sm {
+        font-size: 0.9125rem !important
+    }
+    
+}
+
+.cd .col-lg-3 .off-img{
+    /* height: 330px !important; */
+    height: auto !important;
+    background-color: #000;
+    margin-top: 10px;
+
 }

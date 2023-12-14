@@ -1,7 +1,7 @@
 {% extends "partials/base_shop.html" %}
 {% load static %}
 {% load cart_tag %}
-{% block script %} <script src="https://js.stripe.com/v3/"></script> {% endblock script%} 
+
 {% block content_detail %}
       <!-- Page Title-->
       <div class="page-title-overlap bg-dark pt-4">
@@ -45,7 +45,7 @@
                   <div class="accordion-body">
                     <p class="fs-sm">We accept following credit cards:&nbsp;&nbsp;<img class="d-inline-block align-middle" src="{% static 'img/cards.png' %}" width="187" alt="Cerdit Cards"></p>
                     <div class="credit-card-wrapper"></div>
-                    <form class="credit-card-form row" action="{% url 'order:create-checkout-session'  pk=pk %} " method="POST">
+                    <form class="credit-card-form row" action=" " method="POST">
                      {% csrf_token %}
                       <div class="mb-3 col-sm-6">
                         <input class="form-control" type="text" name="number" placeholder="Card Number" required>
