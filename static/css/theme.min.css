@@ -9824,7 +9824,7 @@ fieldset:disabled .btn {
 
 .text-muted {
     --cz-text-opacity: 1;
-    font-size: 8px;
+    font-size: 16px;
     color: #7d879c !important
     
 }

@@ -1,14 +1,15 @@
 {% extends "partials/base.html" %}
 {% load static %}
 {% block title %}Home{% endblock %}
+{% load course_tags %}
 {% block content %}
 
       <!-- Hero (Banners + Slider)-->
-      <section class="bg-secondary py-4 pt-md-5">
+      <section class="bg-secondary py-1 pt-md-1 ">
         <div class="container py-xl-2">
           <div class="row">
             <!-- Slider     -->
-            <div class="col-xl-9 pt-xl-4 order-xl-2">
+            <div class="col-xl-9 pt-xl-4 order-xl-2 d-none">
               <div class="tns-carousel">
                 <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 1, &quot;controls&quot;: false, &quot;loop&quot;: false}">
                   {% for hero in hero|slice:3 %}
@@ -26,9 +27,32 @@
                   {% endfor %}
                 </div>
               </div>
+            </div> 
+             <!-- Slider  two   -->
+            <div class="col-xl-9 pt-xl-4 order-xl-2 d-none">
+              <div class="tns-carousel">
+                <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 1, &quot;controls&quot;: false, &quot;loop&quot;: false}">
+                  <div>
+                    <div class="row align-items-center">
+                      <div class="col-md-12 order-md-2">
+                        <a href="{% url "products:shop" %}">
+                        <img class="d-block mx-auto" src="{% static 'img\hero 1.jpg' %}" alt="VR Collection"></div>
+                      </a>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="row align-items-center">
+                      <div class="col-md-12 order-md-2">
+                        <a href="{% url "products:shop" %}">
+                        <img class="d-block mx-auto" src="{% static 'img\hero 1.jpg' %}" alt="VR Collection"></div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <!-- Banner group-->
-            <div class="col-xl-3 order-xl-1 pt-4 mt-3 mt-xl-0 pt-xl-0">
+            <div class="col-xl-3 order-xl-1 pt-4 mt-3 mt-xl-0 pt-xl-0 d-none">
               <div class="table-responsive" data-simplebar>
                 <div class="d-flex d-xl-block"><a class="d-flex align-items-center bg-faded-info rounded-3 pt-2 ps-2 mb-4 me-4 me-xl-0" href="javascript:void(0)" style="min-width: 16rem;"><img src="{% static 'img/home/banners/banner-sm01.png' %}" width="125" alt="Banner">
                     <div class="py-4 px-2">
@@ -49,6 +73,7 @@
           </div>
         </div>
       </section>
+
       <!-- Products grid (Trending products)-->
       <section class="container pt-5">
         <!-- Heading-->
@@ -76,6 +101,7 @@
           <!-- Product-->
         </div>
       </section>
+
       <!-- Promo banner-->
       {% for i in offer_counter %}
       <section class="container mt-4 mb-grid-gutter">
@@ -99,6 +125,7 @@
           </div>
         </section>
       {% endfor %}
+
       <!-- Brands carousel-->
       <section class="container mb-5">
         <div class="tns-carousel border-end">
@@ -114,6 +141,7 @@
           </div>
         </div>
       </section>
+
       <!-- ⚡Month refrigatory-->
       {% if refrigentor %}
       <section class="container ">
@@ -126,7 +154,7 @@
             <div class="off-img">
               <div class="card bg-secondary product-card card-static pb-3">
                 <a class="card-img-top d-block overflow-hidden" href="{{ refrigentor.get_absolute_url }}">
-                  <img src="{% static 'img\Off.jpg' %}" alt="Product"></a>
+                  <img src="{% static 'img\offr.jpg' %}" alt="Product"></a>
               </div>
             </div>
           </div>
@@ -155,7 +183,7 @@
                     <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
                     <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="javascript:void(0)">{{refr.vendor}}</a>
                       <h3 class="product-title fs-sm text-truncate"><a href="{{ refr.get_absolute_url }}">{{refr.name}}</a></h3>
-                      <div class="product-price"><span class="text-accent">₹<small></small></span>
+                      <div class="product-price"><span class="text-accent">₹{% discount_calculation  refr.get_original_price refr.get_price %}<small></small></span>
                         <del class="fs-sm text-muted">₹{{refr.get_original_price}}<small></small></del>
                       </div>
                     </div>
@@ -213,7 +241,7 @@
                     <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
                     <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="javascript:void(0)">{{offer.vendor}}</a>
                       <h3 class="product-title fs-sm text-truncate"><a href="{{ offer.get_absolute_url }}">{{offer.name}}</a></h3>
-                      <div class="product-price"><span class="text-accent">₹<small></small></span>
+                      <div class="product-price"><span class="text-accent">₹{% discount_calculation  offer.get_original_price offer.get_price %}<small></small></span>
                         <del class="fs-sm text-muted">₹{{offer.get_original_price}}<small></small></del>
                       </div>
                     </div>
@@ -230,6 +258,7 @@
         </div>
       </section> 
       {% endif %}
+
       <!-- TV LCD-->
       {% if led_tv %}
       <section class="container ">
@@ -241,7 +270,7 @@
           <div class="col-lg-3 col-md-4 pt-3 pt-md-4">
             <div class="off-img">
               <div class="card bg-secondary product-card card-static pb-3">
-                <a class="card-img-top d-block overflow-hidden" href="{{ air.get_absolute_url }}"><img src="{% static 'img\Off.jpg' %}" alt="Product"></a>
+                <a class="card-img-top d-block overflow-hidden" href="{{ air.get_absolute_url }}"><img src="{% static 'img\offt.jpg' %}" alt="Product"></a>
               </div>
             </div>
           </div>
@@ -251,7 +280,7 @@
                 {% for led in led_tv %}
                 <div>
                   <div class="card product-card card-static pb-3">
-                    <span class="round-r badge bg-danger rounded-pill badge-shadow">33% <br> off</span>
+                    <span class="round-r badge bg-danger rounded-pill badge-shadow">{{led.get_price}}% <br> off</span>
                     {% if led.id %}
                         <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in air.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
                           <a href="{% url 'order:add_to_wishlist' store_id=led.id %}">
@@ -270,7 +299,7 @@
                     <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
                     <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="javascript:void(0)">{{led.vendor}}</a>
                       <h3 class="product-title fs-sm text-truncate"><a href="{{ led.get_absolute_url }}">{{led.name}}</a></h3>
-                      <div class="product-price"><span class="text-accent">₹36,990.<small></small></span>
+                      <div class="product-price"><span class="text-accent">₹{% discount_calculation  led.get_original_price led.get_price %}<small></small></span>
                         <del class="fs-sm text-muted">₹{{led.get_original_price}}<small></small></del>
                       </div>
                     </div>
@@ -288,19 +317,18 @@
       </section> 
       {% endif %}
       
- 
       <!-- KITCHEN APPLIANCES-->
       {% if kitchen_appliance %}
       <section class="container ">
         <div class="row cd">
           <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
-            <h2 class="h3 mb-0 pt-3 me-3">Air Conditions products</h2>
+            <h2 class="h3 mb-0 pt-3 me-3">KITCHEN APPLIANCES products</h2>
             <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="{% url "products:shop" %}?q={{ kitchen_appliance.0.subcategory.slug }}">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
           </div>
           <div class="col-lg-3 col-md-4 pt-3 pt-md-4">
             <div class="off-img">
               <div class="card bg-secondary product-card card-static pb-3">
-                <a class="card-img-top d-block overflow-hidden" href="{{ air.get_absolute_url }}"><img src="{% static 'img\Off.jpg' %}" alt="Product"></a>
+                <a class="card-img-top d-block overflow-hidden" href="{{ air.get_absolute_url }}"><img src="{% static 'img\offm.jpg' %}" alt="Product"></a>
               </div>
             </div>
           </div>
@@ -310,7 +338,7 @@
                 {% for kitchen in kitchen_appliance %}
                 <div>
                   <div class="card product-card card-static pb-3">
-                    <span class="round-r badge bg-danger rounded-pill badge-shadow">33% <br> off</span>
+                    <span class="round-r badge bg-danger rounded-pill badge-shadow">{{kitchen.get_price}}% <br> off</span>
                     {% if kitchen.id %}
                         <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in air.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
                           <a href="{% url 'order:add_to_wishlist' store_id=kitchen.id %}">
@@ -329,7 +357,7 @@
                     <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
                     <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="javascript:void(0)">{{kitchen.vendor}}</a>
                       <h3 class="product-title fs-sm text-truncate"><a href="{{ kitchen.get_absolute_url }}">{{kitchen.name}}</a></h3>
-                      <div class="product-price"><span class="text-accent">₹36,990.<small></small></span>
+                      <div class="product-price"><span class="text-accent">₹{% discount_calculation  kitchen.get_original_price kitchen.get_price %}<small></small></span>
                         <del class="fs-sm text-muted">₹{{kitchen.get_original_price}}<small></small></del>
                       </div>
                     </div>
@@ -346,66 +374,77 @@
         </div>
       </section> 
       {% endif %}
-      
 
-
-      <!-- Air-conditions -->
+      <!-- computer_a_printers-->
       {% if computer_a_printers %}
-      <section class="container pt-2 mb-2">
-        <!-- Heading-->
-        <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
-          <h2 class="h3 mb-0 pt-3 me-2 ">COMPUTER A PRINTERS</h2>
-          <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="{% url "products:shop" %}?q={{ air_condition.0.subcategory.slug }}">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
-        </div>
-        <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
-          <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
-            <!-- Product-->
-            {% for i in computer_a_printers %}
-            <div>
-              <div class="card product-card card-static pb-3">
-                <span class="round-r badge bg-danger rounded-pill badge-shadow">33% <br> off</span>
-                {% if i.id %}
-                    <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in air.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
-                      <a href="{% url 'order:add_to_wishlist' store_id=i.id %}">
-                      {% if request.user in i.wishlisted_by.all %}
-                        <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
-                      {% else %}
-                        <i class="fa-regular fa-heart" style="color: #001d42;"></i>
-                      {% endif %}
-                      </a>
-                    </button>
-                  {% else %}
-                    <!-- Handle the case where p.id is empty or not valid -->
-                    <p>This product is not available.</p>
-                  {% endif %}
-                <a class="card-img-top d-block overflow-hidden" href="{{ i.get_absolute_url }}"><img src="{{i.image.url}}" alt="Product"></a>
-                <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
-                <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="javascript:void(0)">{{i.vendor}}</a>
-                  <h3 class="product-title fs-sm text-truncate"><a href="{{ i.get_absolute_url }}">{{i.name}}</a></h3>
-                  <div class="product-price"><span class="text-accent">₹36,990.<small></small></span>
-                    <del class="fs-sm text-muted">₹{{i.get_original_price}}<small></small></del>
-                  </div>
-                </div>
-                <div class="product-floating-btn">
-                  <button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button>
-                </div>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-      </section>
-      {% endif %}
       <section class="container ">
         <div class="row cd">
           <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
-            <h2 class="h3 mb-0 pt-3 me-3">Air Conditions products</h2>
-            <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="grocery-catalog.html">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
+            <h2 class="h3 mb-0 pt-3 me-3">Computer a Printer products</h2>
+            <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="{% url "products:shop" %}?q={{ computer_a_printers.0.subcategory.slug }}">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
           </div>
           <div class="col-lg-3 col-md-4 pt-3 pt-md-4">
             <div class="off-img">
               <div class="card bg-secondary product-card card-static pb-3">
-                <a class="card-img-top d-block overflow-hidden" href="{{ air.get_absolute_url }}"><img src="{% static 'img\Off.jpg' %}" alt="Product"></a>
+                <a class="card-img-top d-block overflow-hidden" href="{{ air.get_absolute_url }}"><img src="{% static 'img\offm.jpg' %}" alt="Product"></a>
+              </div>
+            </div>
+          </div>
+          <section class="col-lg-9 col-md-8 pt-3 pt-md-4"> 
+            <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
+              <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
+                 {% for i in computer_a_printers %}
+                <div>
+                  <div class="card product-card card-static pb-3">
+                    <span class="round-r badge bg-danger rounded-pill badge-shadow">{{i.get_price}}% <br> off</span>
+                    {% if i.id %}
+                        <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in air.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
+                          <a href="{% url 'order:add_to_wishlist' store_id=i.id %}">
+                          {% if request.user in i.wishlisted_by.all %}
+                            <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                          {% else %}
+                            <i class="fa-regular fa-heart" style="color: #001d42;"></i>
+                          {% endif %}
+                          </a>
+                        </button>
+                      {% else %}
+                        <!-- Handle the case where p.id is empty or not valid -->
+                        <p>This product is not available.</p>
+                      {% endif %}
+                    <a class="card-img-top d-block overflow-hidden" href="{{ i.get_absolute_url }}"><img src="{{i.image.url}}" alt="Product"></a>
+                    <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
+                    <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="javascript:void(0)">{{i.vendor}}</a>
+                      <h3 class="product-title fs-sm text-truncate"><a href="{{ i.get_absolute_url }}">{{i.name}}</a></h3>
+                      <div class="product-price"><span class="text-accent">₹{% discount_calculation  i.get_original_price i.get_price %}.<small></small></span>
+                        <del class="fs-sm text-muted">₹{{i.get_original_price}}<small></small></del>
+                      </div>
+                    </div>
+                    <div class="product-floating-btn">
+                      <a href="{% url 'order:cart_add' i.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                <!-- Product-->
+              </div>
+            </div>
+          </section>
+        </div>
+      </section> 
+      {% endif %}
+
+      <!-- Air-conditions -->
+      {% if air_condition %}
+      <section class="container ">
+        <div class="row cd">
+          <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
+            <h2 class="h3 mb-0 pt-3 me-3">Air Conditions products</h2>
+            <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="{% url "products:shop" %}?q={{ air_condition.0.subcategory.slug }}">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
+          </div>
+          <div class="col-lg-3 col-md-4 pt-3 pt-md-4">
+            <div class="off-img">
+              <div class="card bg-secondary product-card card-static pb-3">
+                <a class="card-img-top d-block overflow-hidden" href="{{ air.get_absolute_url }}"><img src="{% static 'img\offa.jpg' %}" alt="Product"></a>
               </div>
             </div>
           </div>
@@ -434,7 +473,7 @@
                     <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
                     <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="javascript:void(0)">{{air.vendor}}</a>
                       <h3 class="product-title fs-sm text-truncate"><a href="{{ air.get_absolute_url }}">{{air.name}}</a></h3>
-                      <div class="product-price"><span class="text-accent">₹36,990.<small></small></span>
+                      <div class="product-price"><span class="text-accent">₹{% discount_calculation  air.get_original_price air.get_price %}<small></small></span>
                         <del class="fs-sm text-muted">₹{{air.get_original_price}}<small></small></del>
                       </div>
                     </div>
@@ -449,7 +488,9 @@
             </div>
           </section>
         </div>
-      </section>  
+      </section>
+      {% endif %}
+
       <!-- Product widgets-->
       <section class="container pb-4 pb-md-5">
         <div class="row">

@@ -1,7 +1,8 @@
 from django.contrib import admin
 from products.models import(
     Maincategory,Groupcategory,Category,Subcategory,Store,Brand,Color,
-    Size,AvaliableSize,ProductImage,Offer_sale,Review,Hero,offer_counter
+    Size,AvaliableSize,ProductImage,Offer_sale,Review,Hero,offer_counter,
+    Gallery_preview
 )
 # Register your models here.
 @admin.register(Maincategory)
@@ -48,6 +49,10 @@ class BrandAdmin(admin.ModelAdmin):
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 0
+
+class Gallery_previewInline(admin.TabularInline):
+    model = Gallery_preview
+    extra = 0
     
 class AvailableSizeInline(admin.TabularInline):
     model = AvaliableSize
@@ -67,7 +72,8 @@ class StoreAdmin(admin.ModelAdmin):
     list_display = ('name', 'subcategory',)
     prepopulated_fields = {'slug': ('name',)}
     list_filter = ('subcategory', 'name',)
-    inlines = [ProductImageInline, AvailableSizeInline,Offer_saleInline,offer_counterInline]
+    inlines = [ProductImageInline, AvailableSizeInline,Offer_saleInline,
+               offer_counterInline,Gallery_previewInline]
     autocomplete_fields = ("subcategory", "brand",)
     search_fields = (
         "name",

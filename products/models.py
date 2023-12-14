@@ -148,6 +148,9 @@ class Store(models.Model):
     def get_image(self):
         return ProductImage.objects.filter(store=self)
     
+    def get_g_preview(self):
+        return Gallery_preview.objects.filter(store=self)
+    
     def get_color(self):
         return ProductImage.objects.filter(store=self).distinct()
     
@@ -232,5 +235,8 @@ class offer_counter(models.Model):
     with_title=models.CharField(max_length=200,null=True ,blank=True)
     sale_end_date = models.DateField(blank=True,null=True)
     
+class Gallery_preview(models.Model):
+    store=models.ForeignKey(Store,on_delete=models.CASCADE)
+    image_preview =models.ImageField(upload_to='gallery-preview-item')
 
 
