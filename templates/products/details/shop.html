@@ -149,18 +149,16 @@
               <div class="col-md-4 col-sm-6 px-2 mb-4">
                 <div class="card product-card">
                   {% if store.id %}
-                    <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in store.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
-                      <a href="{% url 'order:add_to_wishlist' store_id=store.id %}">
+                    <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip"  data-store-id="{{ store.id }}" data-bs-placement="left" data-wishlist-url="{% url 'order:add_to_wishlist' store_id=store.id %}">
                       {% if request.user in store.wishlisted_by.all %}
                         <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
                       {% else %}
                         <i class="fa-regular fa-heart" style="color: #001d42;"></i>
                       {% endif %}
-                      </a>
-                    </button>
+                    </button>  
                   {% else %}
-                    <!-- Handle the case where p.id is empty or not valid -->
-                    <p>This product is not available.</p>
+                      <!-- Handle the case where store id is empty or not valid -->
+                     <p>This product is not available.</p>
                   {% endif %}
                   <span class="round-r badge bg-danger rounded-pill badge-shadow">{{store.get_price}}<br> off</span>
 
@@ -186,12 +184,16 @@
                         </div>
                       </div>
                       <div class="card-body card-body-hidden">
-                        <a href="{% url 'order:cart_add' store.id %}"><input type="submit" value="Add to Cart" class="btn btn-primary btn-sm d-block w-100 mb-2" ></a>
+                        {% comment %} <a data-product-id="{{ store.id }}" href="{% url 'order:cart_add' store.id %}"><input type="submit"  value="Add to Cart" class="btn btn-primary btn-sm d-block w-100 mb-2" ></a> {% endcomment %}
+                        <!-- Updated HTML for the "Add to Cart" button -->
+                        <a data-product-id="{{ store.id }}" class="add-to-cart-btn" href="{% url 'order:cart_add' store.id %}">
+                          <input type="submit" value="Add to Cart" class="btn btn-primary btn-sm d-block w-100 mb-2">
+                        </a>
                         <div class="text-center"><a class="nav-link-style fs-ms" href="#quick-view-{{store.id}}" data-bs-toggle="modal"><i class="ci-eye align-middle me-1"></i>Quick view</a></div>
                       </div>
-                    </div>
-                    <hr class="d-sm-none">
                   </div>
+                <hr class="d-sm-none">
+              </div>
               {% endfor %}
             </div>
             <hr class="my-3">
@@ -229,4 +231,37 @@
         </div>
       </div>
     </main>
+   
+    <!-- Add to Cart button -->
+
+
+<!-- JavaScript using jQuery for the AJAX request -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.add-to-cart-btn').click(function(event) {
+        event.preventDefault();
+        var productId = $(this).data('product-id');
+        
+        $.ajax({
+            type: 'POST',
+            url: '{% url "order:cart_add" 0 %}'.replace('0', productId),
+            dataType: 'json',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+            },
+            success: function(data) {
+                // Update cart icon count or total amount displayed on the page
+                $('.navbar-tool-label').text(data.cart_count);
+                $('.navbar-tool-text small').text('My Cart $' + data.cart_total_amount);
+            },
+            error: function(xhr, errmsg, err) {
+                console.log(errmsg);
+            }
+        });
+    });
+});
+</script>
+
+
     {% endblock  %}

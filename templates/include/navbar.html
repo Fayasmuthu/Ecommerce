@@ -36,8 +36,10 @@
                 <a href="{% url "auth_login" %}"><div class="navbar-tool-text ms-n3"><small>Hello, Login</small>My Account</div> </a>
                 {% endif %}
             </a>
+           
 
-            <div class="navbar-tool dropdown ms-3"><a class="navbar-tool-icon-box bg-secondary dropdown-toggle" href="{% url "order:cart_detail" %}"><span class="navbar-tool-label">{{request.session.cart|length}}</span><i class="navbar-tool-icon ci-cart"></i></a><a class="navbar-tool-text" href="{% url "order:cart_detail" %}"><small>My Cart</small>${{cart_total_amount}}</a>
+            <div class="navbar-tool dropdown ms-3"><span class="navbar-tool-label wishlist_num_count">{{ wishlist_count }}</span><a class="dropdown-item" href="{% url 'order:wishlist_page' %}"><i class="ci-heart text-muted me-2"></i></a></div>
+            <div class="navbar-tool dropdown ms-3"><a class="navbar-tool-icon-box bg-secondary dropdown-toggle" href="{% url "order:cart_detail" %}"><span class="navbar-tool-label cart_num_count ">{{ cart_items|length }}</span><i class="navbar-tool-icon ci-cart"></i></a><a class="navbar-tool-text" href="{% url "order:cart_detail" %}"><small>My Cart</small><b> ${{cart_total_amount}}</b></a>
               <!-- Cart dropdown-->
               <div class="dropdown-menu dropdown-menu-end">
                 <div class="widget widget-cart px-3 pt-2 pb-3" style="width: 20rem;">
@@ -122,4 +124,27 @@
         </div>
       </div>
     </div>
- 
+ <script>
+  $(document).ready(function() {
+    $('.btn-remove-from-wishlist').click(function(e) {
+        e.preventDefault();
+        var button = $(this);
+        $.ajax({
+            type: 'GET',
+            url: '/add_to_wishlist/' + storeId + '/', // Replace with correct URL
+            success: function(data) {
+                if (!data.wished) {
+                    var currentCount = parseInt($('.wishlist-count').text());
+                    $('.wishlist-count').text(currentCount - 1); // Update count on UI
+                }
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                // Handle error
+            }
+        });
+    });
+});
+
+
+
+ </script>

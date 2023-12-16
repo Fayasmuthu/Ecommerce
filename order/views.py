@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from cart.cart import Cart
 from products.models import Store
 from django.contrib.auth.models import User
-from . models import Orders,OrderItem,UserProfile
+from . models import Orders,OrderItem,UserProfile,WishlistItem
 from .forms import UserProfileForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils import timezone
@@ -13,6 +13,10 @@ import stripe
 from django.urls import reverse
 from django.conf import settings
 from django.views.generic import TemplateView
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
+from django.contrib import messages
 
 # Create your views here.
 def index(request):
@@ -66,50 +70,59 @@ def account_order(request):
 
     #__________________-END PAGINATION-_____________________________
 
-
     context = {
         'order_items': order_items,
         'order_items': paginated_order_items,
         'order_count': order_count,
         'profile':profile
-
     }
     return render(request, "account/account-orders.html",context)
 
 
 @login_required
 def add_to_wishlist(request, store_id):
-    store = Store.objects.get(id=store_id)
+    store = get_object_or_404(Store, id=store_id)
+    # store = Store.objects.get(id=store_id)
+    wished = False
     if request.user in store.wishlisted_by.all():
         store.wishlisted_by.remove(request.user)
     else:
         store.wishlisted_by.add(request.user)
+        wished = True
 
-    return redirect('order:wishlist_page') 
+    # return redirect('order:wishlist_page')
+    return JsonResponse({'wished': wished})
 
 
 @login_required
 def wishlist_page(request):
-    wishlist_items = request.user.wishlist.all()
-    wishlist_count = request.user.wishlist.count()
+    wishlist_items =request.user.wishlist.all()
+    wishlist_count =request.user.wishlist.count()
     profile = UserProfile.objects.get(user=request.user)
 
     context = {
         'wishlist_items': wishlist_items,
         'wishlist_count': wishlist_count,
         'profile':profile
-
     }
     return render(request, 'account/wishlist.html',context)
 
-  
 
 @login_required
 def cart_add(request, id):
     cart = Cart(request)
     product = Store.objects.get(id=id)
     cart.add(product=product)
-    return redirect("products:shop")
+    
+    cart_items = request.session.get('cart', {})
+    cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
+    
+    response_data = {
+        'cart_total_amount': cart_total_amount,
+        'cart_count': len(cart_items),
+    }
+    return JsonResponse(response_data)
+
 
 
 @login_required
@@ -147,6 +160,7 @@ def cart_clear(request):
 def cart_detail(request):
     profile = UserProfile.objects.get(user=request.user)
     cart_items = request.session.get('cart', {})
+    wishlist_count =request.user.wishlist.count()
     
     # Calculate total cart amount
     cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
@@ -154,6 +168,7 @@ def cart_detail(request):
     context = {
         'cart_items': cart_items,
         'cart_total_amount': cart_total_amount,
+        'wishlist_count': wishlist_count,
         'profile':profile
     }
     return render(request, 'cart/cart.html',context)

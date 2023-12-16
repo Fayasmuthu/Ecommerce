@@ -75,7 +75,9 @@
                 </div>
               </div>
               <div class="pt-2 ps-sm-3 mx-auto mx-sm-0 text-center">
-                <button class="btn btn-outline-danger btn-sm" type="button"><a href="{% url 'order:add_to_wishlist' wish.id %}"><i class="ci-trash me-2"></i>Remove</a></button>
+                <button class="btn btn-outline-danger btn-sm btn-wishlist-remove" type="button" data-store-id="{{ wish.id }}">
+                  <i class="ci-trash me-2"></i>Remove
+              </button>
               </div>
             </div> 
             {% endfor %}
@@ -83,4 +85,40 @@
         </div>
       </div>
     </main>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script>
+      $(document).ready(function() {
+        $('.btn-wishlist-remove').click(function(e) {
+            e.preventDefault();
+            var storeId = $(this).data('store-id');
+            var button = $(this); // Store the button reference for later use
+            $.ajax({
+                type: 'GET',
+                url: '/add_to_wishlist/' + storeId + '/',
+                success: function(data) {
+                    // Handle success, update UI based on 'data' response
+                    if (data.wished) {
+                        // Item was added to wishlist
+                        // Update UI if needed
+                    } else {
+                        // Item was removed from wishlist
+                        // Update UI if needed
+                        button.closest('.d-sm-flex').fadeOut(300, function() {
+                            $(this).remove(); // Remove the item from UI
+                            var currentCount = parseInt($('.wishlist-count').text());
+                            $('.wishlist-count').text(currentCount - 1); // Update count on UI
+                        });
+                    }
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    // Handle error
+                }
+            });
+        });
+    });
+    
+    
+    </script>
     {% endblock  %}
+    

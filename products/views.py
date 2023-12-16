@@ -35,6 +35,8 @@ def index(request):
     best_seller =Store.objects.filter(is_best_seller=True)[:8]
     new_arrival =Store.objects.filter(is_new_arrival=True)[:8]
     top_rated =Store.objects.filter(is_top_rated=True)[:8]
+    wishlist_count =request.user.wishlist.count()
+
 
     category=request.GET.get('category')
     q= request.GET.get('q')
@@ -74,6 +76,7 @@ def index(request):
         'best_seller':best_seller,
         'new_arrival':new_arrival,
         'top_rated':top_rated,
+        'wishlist_count': wishlist_count,
         "is_index": True
 
     }
@@ -91,6 +94,7 @@ def shop(request):
     brands =Brand.objects.annotate(store_count=Count('brand__name'))
     sizes =Size.objects.all()
     total_products = store.count()
+    wishlist_count =request.user.wishlist.count()
 
     q= request.GET.get('q')
     category=request.GET.get('category')
@@ -139,6 +143,7 @@ def shop(request):
         'cart_total_amount': cart_total_amount,
         'stories': paginated_stores,
         'total_products': total_products,
+        'wishlist_count': wishlist_count,
         "is_shop": True
    
     }

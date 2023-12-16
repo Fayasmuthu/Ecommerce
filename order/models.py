@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from products.models import Store
 # Create your models here.
 
 class Orders(models.Model):
@@ -62,4 +63,7 @@ def save_user_profile(sender, instance, **kwargs):
         UserProfile.objects.create(user=instance)
 
 
-
+class WishlistItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    story = models.ForeignKey(Store, on_delete=models.CASCADE)
+    added_at = models.DateTimeField(auto_now_add=True)

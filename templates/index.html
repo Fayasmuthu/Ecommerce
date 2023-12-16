@@ -2,6 +2,7 @@
 {% load static %}
 {% block title %}Home{% endblock %}
 {% load course_tags %}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 {% block content %}
 
       <!-- Hero (Banners + Slider)-->
@@ -29,21 +30,31 @@
               </div>
             </div> 
              <!-- Slider  two   -->
-            <div class="col-xl-9 pt-xl-4 order-xl-2 d-none">
+            <div class="col-xl-9 pt-xl-4 order-xl-2">
               <div class="tns-carousel">
                 <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 1, &quot;controls&quot;: false, &quot;loop&quot;: false}">
                   <div>
                     <div class="row align-items-center">
                       <div class="col-md-12 order-md-2">
-                        <a href="{% url "products:shop" %}">
-                        <img class="d-block mx-auto" src="{% static 'img\hero 1.jpg' %}" alt="VR Collection"></div>
+                        <a href="javascript:vold(0)">
+                        <img class="d-block mx-auto" src="{% static 'img\2.jpg' %}" alt="VR Collection"></div>
                       </a>
                     </div>
                   </div>
+
                   <div>
                     <div class="row align-items-center">
                       <div class="col-md-12 order-md-2">
-                        <a href="{% url "products:shop" %}">
+                        <a href="javascript:vold(0)">
+                        <img class="d-block mx-auto" src="{% static 'img\1.jpg' %}" alt="VR Collection"></div>
+                      </a>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="row align-items-center">
+                      <div class="col-md-12 order-md-2">
+                        <a href="javascript:vold(0)">
                         <img class="d-block mx-auto" src="{% static 'img\hero 1.jpg' %}" alt="VR Collection"></div>
                       </a>
                     </div>
@@ -75,7 +86,7 @@
       </section>
 
       <!-- Products grid (Trending products)-->
-      <section class="container pt-5">
+      <section class="container pt-1">
         <!-- Heading-->
         <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
           
@@ -166,14 +177,12 @@
                   <div class="card product-card card-static pb-3">
                     <span class="round-r badge bg-danger rounded-pill badge-shadow">{{refr.get_price}}% <br> off</span>
                     {% if refr.id %}
-                        <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in refr.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
-                          <a href="{% url 'order:add_to_wishlist' store_id=refr.id %}">
-                          {% if request.user in air.wishlisted_by.all %}
+                        <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-store-id="{{ refr.id }}" data-bs-placement="left" data-wishlist-url="{% url 'order:add_to_wishlist' store_id=refr.id %}">
+                          {% if request.user in refr.wishlisted_by.all %}
                             <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
                           {% else %}
                             <i class="fa-regular fa-heart" style="color: #001d42;"></i>
                           {% endif %}
-                          </a>
                         </button>
                       {% else %}
                         <!-- Handle the case where p.id is empty or not valid -->
@@ -188,7 +197,7 @@
                       </div>
                     </div>
                     <div class="product-floating-btn">
-                      <a href="{% url 'order:cart_add' refr.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
+                      <a data-product-id="{{ refr.id }}" class="add-to-cart-btn" href="{% url 'order:cart_add' refr.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
                     </div>
                   </div>
                 </div>
@@ -219,34 +228,33 @@
           <section class="col-lg-9 col-md-8 pt-3 pt-md-4"> 
             <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
               <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
-                {% for offer in offer_sale %}
+                {% for store in offer_sale %}
                 <div>
                   <div class="card product-card card-static pb-3">
                     <span class="round-r badge bg-danger rounded-pill badge-shadow">{{offer.get_price}}% <br> off</span>
-                    {% if offer.id %}
-                        <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in offer.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
-                          <a href="{% url 'order:add_to_wishlist' store_id=offer.id %}">
-                          {% if request.user in air.wishlisted_by.all %}
+                    {% if store.id %}
+                        <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-store-id="{{ store.id }}" data-bs-placement="left" data-wishlist-url="{% url 'order:add_to_wishlist' store_id=store.id %}">
+                          {% if request.user in store.wishlisted_by.all %}
                             <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
                           {% else %}
                             <i class="fa-regular fa-heart" style="color: #001d42;"></i>
                           {% endif %}
-                          </a>
                         </button>
                       {% else %}
                         <!-- Handle the case where p.id is empty or not valid -->
                         <p>This product is not available.</p>
                       {% endif %}
-                    <a class="card-img-top d-block overflow-hidden" href="{{ offer.get_absolute_url }}"><img src="{{offer.image.url}}" alt="Product"></a>
+                      
+                    <a class="card-img-top d-block overflow-hidden" href="{{ store.get_absolute_url }}"><img src="{{store.image.url}}" alt="Product"></a>
                     <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
-                    <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="javascript:void(0)">{{offer.vendor}}</a>
-                      <h3 class="product-title fs-sm text-truncate"><a href="{{ offer.get_absolute_url }}">{{offer.name}}</a></h3>
-                      <div class="product-price"><span class="text-accent">₹{% discount_calculation  offer.get_original_price offer.get_price %}<small></small></span>
-                        <del class="fs-sm text-muted">₹{{offer.get_original_price}}<small></small></del>
+                    <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="javascript:void(0)">{{store.vendor}}</a>
+                      <h3 class="product-title fs-sm text-truncate"><a href="{{ store.get_absolute_url }}">{{store.name}}</a></h3>
+                      <div class="product-price"><span class="text-accent">₹{% discount_calculation  store.get_original_price store.get_price %}<small></small></span>
+                        <del class="fs-sm text-muted">₹{{store.get_original_price}}<small></small></del>
                       </div>
                     </div>
                     <div class="product-floating-btn">
-                      <a href="{% url 'order:cart_add' offer.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
+                      <a data-product-id="{{ store.id }}" class="add-to-cart-btn" href="{% url 'order:cart_add' store.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
                     </div>
                   </div>
                 </div>
@@ -282,19 +290,17 @@
                   <div class="card product-card card-static pb-3">
                     <span class="round-r badge bg-danger rounded-pill badge-shadow">{{led.get_price}}% <br> off</span>
                     {% if led.id %}
-                        <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in air.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
-                          <a href="{% url 'order:add_to_wishlist' store_id=led.id %}">
-                          {% if request.user in air.wishlisted_by.all %}
-                            <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
-                          {% else %}
-                            <i class="fa-regular fa-heart" style="color: #001d42;"></i>
-                          {% endif %}
-                          </a>
-                        </button>
+                    <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip"  data-store-id="{{ led.id }}" data-bs-placement="left" data-wishlist-url="{% url 'order:add_to_wishlist' store_id=led.id %}">
+                      {% if request.user in led.wishlisted_by.all %}
+                        <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
                       {% else %}
-                        <!-- Handle the case where p.id is empty or not valid -->
-                        <p>This product is not available.</p>
+                        <i class="fa-regular fa-heart" style="color: #001d42;"></i>
                       {% endif %}
+                    </button>  
+                    {% else %}
+                      <!-- Handle the case where store id is empty or not valid -->
+                     <p>This product is not available.</p>
+                    {% endif %}
                     <a class="card-img-top d-block overflow-hidden" href="{{ led.get_absolute_url }}"><img src="{{led.image.url}}" alt="Product"></a>
                     <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
                     <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="javascript:void(0)">{{led.vendor}}</a>
@@ -304,7 +310,7 @@
                       </div>
                     </div>
                     <div class="product-floating-btn">
-                      <button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button>
+                      <a data-product-id="{{ led.id }}" class="add-to-cart-btn" href="{% url 'order:cart_add' led.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
                     </div>
                   </div>
                 </div>
@@ -340,19 +346,17 @@
                   <div class="card product-card card-static pb-3">
                     <span class="round-r badge bg-danger rounded-pill badge-shadow">{{kitchen.get_price}}% <br> off</span>
                     {% if kitchen.id %}
-                        <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in air.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
-                          <a href="{% url 'order:add_to_wishlist' store_id=kitchen.id %}">
-                          {% if request.user in kitchen.wishlisted_by.all %}
-                            <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
-                          {% else %}
-                            <i class="fa-regular fa-heart" style="color: #001d42;"></i>
-                          {% endif %}
-                          </a>
-                        </button>
+                    <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip"  data-store-id="{{ kitchen.id }}" data-bs-placement="left" data-wishlist-url="{% url 'order:add_to_wishlist' store_id=kitchen.id %}">
+                      {% if request.user in kitchen.wishlisted_by.all %}
+                        <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
                       {% else %}
-                        <!-- Handle the case where p.id is empty or not valid -->
-                        <p>This product is not available.</p>
+                        <i class="fa-regular fa-heart" style="color: #001d42;"></i>
                       {% endif %}
+                    </button>  
+                    {% else %}
+                      <!-- Handle the case where store id is empty or not valid -->
+                     <p>This product is not available.</p>
+                    {% endif %}
                     <a class="card-img-top d-block overflow-hidden" href="{{ kitchen.get_absolute_url }}"><img src="{{kitchen.image.url}}" alt="Product"></a>
                     <img src="{% static 'img/sticker.png' %}" alt="" class="productssale" >
                     <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="javascript:void(0)">{{kitchen.vendor}}</a>
@@ -362,7 +366,7 @@
                       </div>
                     </div>
                     <div class="product-floating-btn">
-                      <a href="{% url 'order:cart_add' kitchen.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
+                      <a data-product-id="{{ kitchen.id }}" class="add-to-cart-btn" href="{% url 'order:cart_add' kitchen.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
                     </div>
                   </div>
                 </div>
@@ -398,14 +402,12 @@
                   <div class="card product-card card-static pb-3">
                     <span class="round-r badge bg-danger rounded-pill badge-shadow">{{i.get_price}}% <br> off</span>
                     {% if i.id %}
-                        <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in air.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
-                          <a href="{% url 'order:add_to_wishlist' store_id=i.id %}">
+                        <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-store-id="{{ i.id }}" data-bs-placement="left" data-wishlist-url="{% url 'order:add_to_wishlist' store_id=i.id %}">
                           {% if request.user in i.wishlisted_by.all %}
                             <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
                           {% else %}
                             <i class="fa-regular fa-heart" style="color: #001d42;"></i>
                           {% endif %}
-                          </a>
                         </button>
                       {% else %}
                         <!-- Handle the case where p.id is empty or not valid -->
@@ -420,7 +422,7 @@
                       </div>
                     </div>
                     <div class="product-floating-btn">
-                      <a href="{% url 'order:cart_add' i.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
+                      <a data-product-id="{{ i.id }}" class="add-to-cart-btn" href="{% url 'order:cart_add' i.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
                     </div>
                   </div>
                 </div>
@@ -456,14 +458,12 @@
                   <div class="card product-card card-static pb-3">
                     <span class="round-r badge bg-danger rounded-pill badge-shadow">33% <br> off</span>
                     {% if air.id %}
-                        <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in air.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
-                          <a href="{% url 'order:add_to_wishlist' store_id=air.id %}">
+                        <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-store-id="{{ air.id }}" data-bs-placement="left" data-wishlist-url="{% url 'order:add_to_wishlist' store_id=air.id %}">
                           {% if request.user in air.wishlisted_by.all %}
                             <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
                           {% else %}
                             <i class="fa-regular fa-heart" style="color: #001d42;"></i>
                           {% endif %}
-                          </a>
                         </button>
                       {% else %}
                         <!-- Handle the case where p.id is empty or not valid -->
@@ -478,7 +478,7 @@
                       </div>
                     </div>
                     <div class="product-floating-btn">
-                      <button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button>
+                      <a data-product-id="{{ air.id }}" class="add-to-cart-btn"  href="{% url 'order:cart_add' air.id %}"><button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button></a>
                     </div>
                   </div>
                 </div>
@@ -596,5 +596,64 @@
               </div></a></div>
         </div>
       </section>
+
+<script>      
+$(document).ready(function() {
+  $('.btn-wishlist').click(function(e) {
+      e.preventDefault();
+      var storeId = $(this).data('store-id');
+      var button = $(this); // Store the button reference for later use
+      $.ajax({
+          type: 'GET',
+          url: '/add_to_wishlist/' + storeId + '/',
+          success: function(data) {
+            console.log(data); // Check if 'wishlist_count' is present and holds the correct value
+            $('.wishlist_num_count').text(data.wishlist_count);
+              // Handle success, update UI based on 'data' response
+              if (data.wished) {
+                  // Item was added to wishlist
+                  button.find('i').removeClass('fa-regular').addClass('fa-solid').css('color', '#ff0000');
+                  button.attr('title', 'Remove from Wishlist');
+              } else {
+                  // Item was removed from wishlist
+                  button.find('i').removeClass('fa-solid').addClass('fa-regular').css('color', '#001d42');
+                  button.attr('title', 'Add to Wishlist');
+              }
+          },
+          error: function(xhr, textStatus, errorThrown) {
+              // Handle error
+          }
+      });
+  });
+});
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.add-to-cart-btn').click(function(event) {
+        event.preventDefault();
+        var productId = $(this).data('product-id');
+        
+        $.ajax({
+            type: 'POST',
+            url: '{% url "order:cart_add" 0 %}'.replace('0', productId),
+            dataType: 'json',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+            },
+            success: function(data) {
+                // Update cart icon count or total amount displayed on the page
+                $('.cart_num_count').text(data.cart_count);
+                $('.navbar-tool-text small').text('My Cart $' + data.cart_total_amount);
+            },
+            error: function(xhr, errmsg, err) {
+                console.log(errmsg);
+            }
+        });
+    });
+});
+</script>
+
    
     {% endblock  %}
