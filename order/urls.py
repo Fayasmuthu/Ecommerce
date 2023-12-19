@@ -23,7 +23,6 @@ urlpatterns = [
     path('cart/checkout-review/',views.checkout_review,name='checkout_review'),
     path('cart/checkout-complete/',views.checkout_complete,name='checkout_complete'),
 
-
     # My account 
     path('account/profile/',views.account_profile,name='account_profile'),
     path('account/order/',views.account_order,name='account_order'),

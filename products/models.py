@@ -158,7 +158,7 @@ class Store(models.Model):
         return AvaliableSize.objects.filter(store=self)
     
     def get_price(self):
-        return min([p.price for p in self.get_sizes()])
+        return min([p.discount for p in self.get_sizes()])
     
     def get_original_price(self):
         sizes =self.get_sizes()
@@ -177,18 +177,24 @@ class Store(models.Model):
     def get_review(self):
         return Review.objects.filter(store=self)
     
+    def calculate_discounted_price(self):
+        sizes = self.get_sizes()
+        discount_prices = [p.discount for p in sizes if p.discount is not None]
+        return min(discount_prices) if discount_prices else None
+    
+    
 
 class AvaliableSize(models.Model):
     store = models.ForeignKey(Store,on_delete=models.CASCADE, related_name='store')
     size =models.ForeignKey('products.Size', on_delete=models.CASCADE, null=True , blank=True)
     color =models.ForeignKey('products.Color', on_delete=models.CASCADE, null=True , blank=True)
-    price =models.DecimalField(max_digits=10,decimal_places=0)
+    discount =models.DecimalField(max_digits=10,decimal_places=0)
     orginal_price =models.IntegerField(null=True ,blank=True)
     opening_stock=models.IntegerField(null=True ,blank=True)
     mini_order_qty=models.IntegerField(null=True ,blank=True)
 
     class Meta:
-        ordering = ("price",)
+        ordering = ("discount",)
         verbose_name = ("Available Size")
         verbose_name_plural = ("Available Sizes")
 

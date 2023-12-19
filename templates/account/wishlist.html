@@ -105,10 +105,10 @@
                         // Item was removed from wishlist
                         // Update UI if needed
                         button.closest('.d-sm-flex').fadeOut(300, function() {
-                            $(this).remove(); // Remove the item from UI
-                            var currentCount = parseInt($('.wishlist-count').text());
-                            $('.wishlist-count').text(currentCount - 1); // Update count on UI
-                        });
+                          $(this).remove(); // Remove the item from UI
+                          var currentCount = parseInt($('.wishlist-count').text());
+                          $('.wishlist-count').text(currentCount - 1); // Update count on UI
+                      });
                     }
                 },
                 error: function(xhr, textStatus, errorThrown) {
@@ -116,9 +116,8 @@
                 }
             });
         });
-    });
-    
-    
+    });  
     </script>
+    
     {% endblock  %}
     

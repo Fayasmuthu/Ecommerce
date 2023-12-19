@@ -17,6 +17,8 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.contrib import messages
+from products.templatetags.course_tags import discount_calculation
+
 
 # Create your views here.
 def index(request):
@@ -24,6 +26,10 @@ def index(request):
 
 @login_required
 def account_profile(request):
+    wishlist_count =request.user.wishlist.count()
+    cart_items = request.session.get('cart', {})
+    cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
+    print("Cart Total Amount:", cart_total_amount)  # Add this line for debugging
     try:
         profile = UserProfile.objects.get(user=request.user)
     except UserProfile.DoesNotExist:
@@ -42,7 +48,10 @@ def account_profile(request):
 
     context={
         'form': form,
-        'profile':profile
+        'profile':profile,
+        'wishlist_count': wishlist_count,
+        'cart_items': cart_items,
+        'cart_total_amount': cart_total_amount,
     }
     return render(request, 'account/account-profile.html', context)
 
@@ -53,7 +62,11 @@ def account_order(request):
     orders = Orders.objects.filter(user=user)
     order_items = OrderItem.objects.filter(orders__in=orders)
     order_count = orders.count()
+    wishlist_count =request.user.wishlist.count()
     profile = UserProfile.objects.get(user=request.user)
+    cart_items = request.session.get('cart', {})
+    cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
+    print("Cart Total Amount:", cart_total_amount)  # Add this line for debugging
 
 
 
@@ -74,7 +87,11 @@ def account_order(request):
         'order_items': order_items,
         'order_items': paginated_order_items,
         'order_count': order_count,
-        'profile':profile
+        'profile':profile,
+        'wishlist_count': wishlist_count,
+        'cart_items': cart_items,
+        'cart_total_amount': cart_total_amount,
+
     }
     return render(request, "account/account-orders.html",context)
 
@@ -82,6 +99,7 @@ def account_order(request):
 @login_required
 def add_to_wishlist(request, store_id):
     store = get_object_or_404(Store, id=store_id)
+
     # store = Store.objects.get(id=store_id)
     wished = False
     if request.user in store.wishlisted_by.all():
@@ -89,9 +107,9 @@ def add_to_wishlist(request, store_id):
     else:
         store.wishlisted_by.add(request.user)
         wished = True
-
+    wishlist_count = request.user.wishlist.count()
     # return redirect('order:wishlist_page')
-    return JsonResponse({'wished': wished})
+    return JsonResponse({'wished': wished, 'wishlist_count': wishlist_count})
 
 
 @login_required
@@ -99,10 +117,14 @@ def wishlist_page(request):
     wishlist_items =request.user.wishlist.all()
     wishlist_count =request.user.wishlist.count()
     profile = UserProfile.objects.get(user=request.user)
+    cart_items = request.session.get('cart', {})
+    cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
 
     context = {
         'wishlist_items': wishlist_items,
         'wishlist_count': wishlist_count,
+        'cart_total_amount': cart_total_amount,
+        'cart_items': cart_items,
         'profile':profile
     }
     return render(request, 'account/wishlist.html',context)
@@ -130,7 +152,15 @@ def item_clear(request, id):
     cart = Cart(request)
     product = Store.objects.get(id=id)
     cart.remove(product)
-    return redirect("order:cart_detail")
+    # return redirect("order:cart_detail")
+    cart_items = request.session.get('cart', {})
+    cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
+    
+    response_data = {
+        'cart_total_amount': cart_total_amount,
+        'cart_count': len(cart_items),
+    }
+    return JsonResponse(response_data)
 
 
 @login_required
@@ -138,7 +168,24 @@ def item_increment(request, id):
     cart = Cart(request)
     product = Store.objects.get(id=id)
     cart.add(product=product)
-    return redirect("order:cart_detail")
+    
+    cart_items = request.session.get('cart', {})
+    cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
+    item_total = discount_calculation(product.get_original_price(),product.get_price()) * cart.get_quantity(product)
+
+    print('cart_count', len(cart_items))
+    print('quantity',cart.get_quantity(product))
+    print('cart_total_amount',cart_total_amount)
+    print('item_total', item_total)
+
+    
+    response_data = {
+        'cart_total_amount': cart_total_amount,
+        'cart_count': len(cart_items),
+        'quantity': cart.get_quantity(product),
+        'item_total': item_total,
+    }
+    return JsonResponse(response_data)
 
 
 @login_required
@@ -146,7 +193,28 @@ def item_decrement(request, id):
     cart = Cart(request)
     product = Store.objects.get(id=id)
     cart.decrement(product=product)
-    return redirect("order:cart_detail")
+    
+    item_total = discount_calculation(product.get_original_price(),product.get_price()) * cart.get_quantity(product)
+    # Fetch updated cart data
+    cart_items = request.session.get('cart', {})
+    cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
+
+    print('cart_count', len(cart_items))
+    print('quantity',cart.get_quantity(product))
+    print('cart_total_amount',cart_total_amount)
+    print('item_total', item_total)
+
+ 
+
+    # Prepare response data
+    response_data = {
+        'cart_total_amount': cart_total_amount,
+        'cart_count': len(cart_items),
+        'quantity': cart.get_quantity(product),  # Get updated quantity for the product
+        'item_total': item_total,
+
+    }
+    return JsonResponse(response_data)
 
 
 @login_required
@@ -169,6 +237,7 @@ def cart_detail(request):
         'cart_items': cart_items,
         'cart_total_amount': cart_total_amount,
         'wishlist_count': wishlist_count,
+        'cart_total_amount': cart_total_amount,
         'profile':profile
     }
     return render(request, 'cart/cart.html',context)
@@ -178,6 +247,7 @@ def cart_detail(request):
 def checkout_detail(request):
     profile = UserProfile.objects.get(user=request.user)
     cart_items = request.session.get('cart', {})
+    wishlist_count =request.user.wishlist.count()
 
     cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
     print("Cart Total Amount:", cart_total_amount) 
@@ -185,6 +255,9 @@ def checkout_detail(request):
     context = {
         'cart_items': cart_items,
         'cart_total_amount': cart_total_amount,
+        'cart_total_amount': cart_total_amount,
+        'cart_items': cart_items,
+        'wishlist_count': wishlist_count,
         'profile':profile
     }
     return render(request, 'cart/checkout-details.html',context)
@@ -193,6 +266,17 @@ def checkout_detail(request):
 @login_required
 def checkout_shipping(request):
     profile = UserProfile.objects.get(user=request.user)
+    wishlist_count =request.user.wishlist.count()
+    cart_items = request.session.get('cart', {})
+    cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
+    context={
+        'cart_total_amount': cart_total_amount,
+        'cart_items': cart_items,
+        'profile':profile,
+        'wishlist_count': wishlist_count,
+
+        }
+           
 
     if request.method == "POST":
         # Fetch user and cart information
@@ -249,12 +333,13 @@ def checkout_shipping(request):
         # order_id = order.id
         # # Redirect to checkout payment page or any other relevant page
         # return redirect(reverse('order:create-checkout-session'}))
-           
-    return render(request, 'cart/checkout-shipping.html',{'profile':profile})
+       
+    return render(request, 'cart/checkout-shipping.html',context)
 
 
 def checkout_payment(request):
     profile = UserProfile.objects.get(user=request.user)
+    wishlist_count =request.user.wishlist.count()
     cart_items = request.session.get('cart', {})
     
     # Calculate total cart amount
@@ -267,6 +352,7 @@ def checkout_payment(request):
         'cart_items': cart_items,
         'cart_total_amount': cart_total_amount,
         'profile':profile,
+        'wishlist_count': wishlist_count,
         'pk': pk 
     }
     return render(request, 'cart/checkout-payment.html',context)
@@ -274,6 +360,7 @@ def checkout_payment(request):
 
 def checkout_review(request):
     profile = UserProfile.objects.get(user=request.user)
+    wishlist_count =request.user.wishlist.count()
     cart_items = request.session.get('cart', {})
     
     # Calculate total cart amount
@@ -284,6 +371,9 @@ def checkout_review(request):
     context = {
         'cart_items': cart_items,
         'cart_total_amount': cart_total_amount,
+        'cart_total_amount': cart_total_amount,
+        'cart_items': cart_items,
+        'wishlist_count': wishlist_count,
         'profile':profile
 
     }

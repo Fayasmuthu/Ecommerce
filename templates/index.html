@@ -597,38 +597,44 @@
         </div>
       </section>
 
-<script>      
+<!-- Make sure jQuery is included before this script -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
 $(document).ready(function() {
   $('.btn-wishlist').click(function(e) {
-      e.preventDefault();
-      var storeId = $(this).data('store-id');
-      var button = $(this); // Store the button reference for later use
-      $.ajax({
-          type: 'GET',
-          url: '/add_to_wishlist/' + storeId + '/',
-          success: function(data) {
-            console.log(data); // Check if 'wishlist_count' is present and holds the correct value
-            $('.wishlist_num_count').text(data.wishlist_count);
-              // Handle success, update UI based on 'data' response
-              if (data.wished) {
-                  // Item was added to wishlist
-                  button.find('i').removeClass('fa-regular').addClass('fa-solid').css('color', '#ff0000');
-                  button.attr('title', 'Remove from Wishlist');
-              } else {
-                  // Item was removed from wishlist
-                  button.find('i').removeClass('fa-solid').addClass('fa-regular').css('color', '#001d42');
-                  button.attr('title', 'Add to Wishlist');
-              }
-          },
-          error: function(xhr, textStatus, errorThrown) {
-              // Handle error
-          }
-      });
+    e.preventDefault();
+    var storeId = $(this).data('store-id');
+    var button = $(this); // Store the button reference for later use
+    $.ajax({
+      type: 'GET',
+      url: '/add_to_wishlist/' + storeId + '/',
+      dataType: 'json',
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+      },
+      success: function(data) {
+        console.log(data); // Check if 'wished' is present and holds the correct value
+        $('.wishlist_num_count').text(data.wishlist_count);
+        // Handle success, update UI based on 'data' response
+        if (data.wished) {
+          // Item was added to wishlist
+          button.find('i').removeClass('fa-regular').addClass('fa-solid').css('color', '#ff0000');
+          button.attr('title', 'Remove from Wishlist');
+        } else {
+          // Item was removed from wishlist
+          button.find('i').removeClass('fa-solid').addClass('fa-regular').css('color', '#001d42');
+          button.attr('title', 'Add to Wishlist');
+        }
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        // Handle error
+      }
+    });
   });
 });
 </script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
     $('.add-to-cart-btn').click(function(event) {
@@ -645,7 +651,7 @@ $(document).ready(function() {
             success: function(data) {
                 // Update cart icon count or total amount displayed on the page
                 $('.cart_num_count').text(data.cart_count);
-                $('.navbar-tool-text small').text('My Cart $' + data.cart_total_amount);
+                $('.cart-total-amount').text('$' + data.cart_total_amount);
             },
             error: function(xhr, errmsg, err) {
                 console.log(errmsg);
@@ -654,6 +660,7 @@ $(document).ready(function() {
     });
 });
 </script>
+
 
    
     {% endblock  %}

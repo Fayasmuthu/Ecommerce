@@ -161,6 +161,8 @@ def shop_list(request):
     brands =Brand.objects.annotate(store_count=Count('brand__name'))
     sizes =Size.objects.all()
     total_products = store.count()
+    wishlist_count =request.user.wishlist.count()
+
 
     q= request.GET.get('q')
     category=request.GET.get('category')
@@ -211,6 +213,8 @@ def shop_list(request):
         'cart_total_amount': cart_total_amount,
         'stories': paginated_stores,
         'total_products': total_products,
+        'wishlist_count': wishlist_count,
+
     }
 
     return render(request, "products/details/shop-list.html",context)

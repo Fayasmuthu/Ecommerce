@@ -43,7 +43,8 @@
                     <div class="product-gallery ">
                       <div class="product-gallery-preview order-sm-2">
                         {% for preview_image in store.get_g_preview %}
-                        <div class="product-gallery-preview-item {% if forloop.first %}active{% endif %}" id="preview_{{ forloop.counter }}"><img class="image-zoom" src="{{ preview_image.image_preview.url }}" data-zoom="{{preview_image.image_preview.url }}" alt="Product image">
+                        <div class="product-gallery-preview-item {% if forloop.first %}active{% endif %}" id="preview_{{ forloop.counter }}">
+                          <img class="image-zoom" src="{{ preview_image.image_preview.url }}" data-zoom="{{preview_image.image_preview.url }}" alt="Product image">
                           <div class="image-zoom-pane"></div>
                         </div>
                         {% endfor %}
@@ -51,7 +52,8 @@
                       
                       <div class="product-gallery-thumblist order-sm-1">
                         {% for preview_image in store.get_g_preview %}
-                        <a class="product-gallery-thumblist-item {% if forloop.first %}active{% endif %}" href="#preview_{{ forloop.counter }}"><img src="{{ preview_image.image_preview.url }}" alt="Product thumb"></a>
+                        <a class="product-gallery-thumblist-item {% if forloop.first %}active{% endif %}" href="#preview_{{ forloop.counter }}">
+                          <img src="{{ preview_image.image_preview.url }}" alt="Product thumb"></a>
                         {% endfor %}
                         {% comment %} 
                         <a class="product-gallery-thumblist-item video-item" href="https://www.youtube.com/watch?v=nrQevwouWn0">

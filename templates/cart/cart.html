@@ -23,32 +23,35 @@
       <div class="container pb-5 mb-2 mb-md-4">
         <div class="row">
           <!-- List of items-->
-          <section class="col-lg-8">
+          <section class="col-lg-8 cart-items">
             <div class="d-flex justify-content-between align-items-center pt-3 pb-4 pb-sm-5 mt-1">
               <h2 class="h6 text-light mb-0">Products</h2><a class="btn btn-outline-primary btn-sm ps-2" href="{% url "products:shop" %}"><i class="ci-arrow-left me-2"></i>Continue shopping</a>
             </div>
             <!-- Item-->
             {% for key,value in request.session.cart.items %}
-            <div class="d-sm-flex justify-content-between align-items-center my-2 pb-3 border-bottom">
-              <div class="d-block d-sm-flex align-items-center text-center text-sm-start"><a class="d-inline-block flex-shrink-0 mx-auto me-sm-4" href="shop-single-v1.html"><img src=" {{value.image}}" width="160" alt="Product"></a>
-                <div class="pt-2">
+            <div class="d-sm-flex justify-content-between align-items-center my-2 pb-3 border-bottom" id="item-{{ value.product_id }}">
+              <div class="product-details d-block d-sm-flex align-items-center text-center text-sm-start">
+                <a class="product-image d-inline-block flex-shrink-0 mx-auto me-sm-4" href="shop-single-v1.html">
+                  <img src=" {{value.image}}" width="160" alt="Product"></a>
+                <div class="product-info pt-2">
                   <h3 class="product-title fs-base mb-2"><a href="shop-single-v1.html">{{value.name}}</a></h3>
                   <div class="fs-sm"><span class="text-muted me-2">Size:</span>8.5</div>
                   <div class="fs-sm"><span class="text-muted me-2">Color:</span>White &amp; Blue</div>
                   <div class="fs-lg text-accent pt-2">$  {{value.price}}<small>00</small></div>
                 </div>
               </div>
-              <div class="pt-2 pt-sm-0 ps-sm-3 mx-auto mx-sm-0 text-center text-sm-start" style="max-width: 9rem;">
-                <label class="form-label" for="quantity1">Quantity</label>
-                <div class="form-label">
-                  <a href="{% url 'order:item_increment' value.product_id %}">+</a>
-                  <input class="form-control" type="text" id="quantity1" min="1" value=" {{value.quantity}}">
-                  <a href="{% url 'order:item_decrement' value.product_id %}">-</a>
-              </div>
+              <div class="item-actions pt-2 pt-sm-0 ps-sm-3 mx-auto mx-sm-0 text-center text-sm-start" style="max-width: 9rem;">
+                <label class="form-label" for="quantity{{ value.product_id }}">Quantity</label>
+                <div class="quantity-control form-label">
+                  <a href="#" class="increment-btn" data-product-id="{{ value.product_id }}">+</a>
+                  <input  class="form-control quantity-input quantity-{{ value.product_id }}" type="text" id="quantity-{{ value.product_id }}" min="1" value="{{ value.quantity }}" data-product-id="{{ value.product_id }}">
+                  <a href="#"  class="decrement-btn" data-product-id="{{ value.product_id }}">-</a>
+              </div>  
               <div>
-              <span>$ {{ value.price|multiply:value.quantity }}</span>
+                <span class="item-total-text" id="item-total-text-{{ value.product_id }}" data-product-id="{{ value.product_id }}">$ {{ value.price|multiply:value.quantity }}</span>
             </div>
-                <button class="btn btn-link px-0 text-danger" type="button"><a href="{% url 'order:item_clear' key %}"><i class="ci-close-circle me-2"></i><span class="fs-sm">Remove</span></a></button>
+                <button data-product-id="{{ value.product_id }}" class="btn btn-link px-0 text-danger remove-btn clear-btn" type="button">
+                  <i class="ci-close-circle me-2"></i><span class="fs-sm">Remove</span></button>
               </div>
             </div>
             {% endfor %}
@@ -60,7 +63,7 @@
               <div class="py-2 px-xl-2">
                 <div class="text-center mb-4 pb-3 border-bottom">
                   <h2 class="h6 mb-3 pb-1">Subtotal</h2>
-                  <h3 class="fw-normal"><small>{{cart_total_amount}}</small></h3>
+                  <h3 class="fw-normal"><small class="cart-total-amount">{{cart_total_amount}}</small></h3>
                 </div>
                 <div class="mb-3 mb-4">
                   <label class="form-label mb-3" for="order-comments"><span class="badge bg-info fs-xs me-2">Note</span><span class="fw-medium">Additional comments</span></label>
@@ -128,4 +131,105 @@
         </div>
       </div>
     </main>
+    
+<script>
+// JavaScript code for item increment using AJAX
+$(document).ready(function() {
+  $('.increment-btn').click(function(event) {
+      event.preventDefault();
+      var productId = $(this).data('product-id');
+
+      $.ajax({
+          type: 'POST',
+          url: '{% url "order:item_increment" 0 %}'.replace('0', productId),
+          dataType: 'json',
+          beforeSend: function(xhr) {
+              xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+          },
+          success: function(data) {
+            var productId = data.product_id;
+        
+            // Update quantity input field value
+            $('.quantity-' + productId).val(data.quantity);
+              
+            // Update item total text
+            $('#item-total-text-' + productId).text('$' + parseFloat(data.item_total).toFixed(2));
+        
+            // Update cart icon count or total amount displayed on the page
+            $('.cart_num_count').text(data.cart_count);
+            $('.cart-total-amount').text('$' + data.cart_total_amount);
+        },
+          error: function(xhr, errmsg, err) {
+              console.log(errmsg);
+          }
+      });
+  });
+});
+
+
+      // JavaScript code for item decrement using AJAX
+$(document).ready(function() {
+  $('.decrement-btn').click(function(event) {
+      event.preventDefault();
+      var productId = $(this).data('product-id');
+      
+      $.ajax({
+          type: 'POST',
+          url: '{% url "order:item_decrement" 0 %}'.replace('0', productId),
+          dataType: 'json',
+          beforeSend: function(xhr) {
+              xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+          },
+          success: function(data) {
+            var productId = data.product_id;
+        
+            // Update quantity input field value
+            $('.quantity-' + productId).val(data.quantity);
+              
+            // Update item total text
+            $('#item-total-text-' + productId).text('$' + parseFloat(data.item_total).toFixed(2));
+            
+            // Update other elements as needed
+            // Update cart icon count or total amount displayed on the page
+            $('.cart_num_count').text(data.cart_count);
+            $('.cart-total-amount').text('$' + data.cart_total_amount);
+        },
+          error: function(xhr, errmsg, err) {
+              console.log(errmsg);
+          }
+      });
+  });
+});
+
+
+// JavaScript code for clearing an item from the cart using AJAX
+$(document).ready(function() {
+  $('.clear-btn').click(function(event) {
+      event.preventDefault();
+      var productId = $(this).data('product-id');
+      
+      $.ajax({
+          type: 'POST',
+          url: '{% url "order:item_clear" 0 %}'.replace('0', productId),
+          dataType: 'json',
+          beforeSend: function(xhr) {
+              xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+          },
+          success: function(data) {
+              // Update cart icon count or total amount displayed on the page
+              $('.cart_num_count').text(data.cart_count);
+              $('.cart-total-amount').text('$' + data.cart_total_amount);
+              // Remove the HTML element of the cleared item from the page
+              $('#item-' + productId).remove();
+          },
+          error: function(xhr, errmsg, err) {
+              console.log(errmsg);
+          }
+      });
+  });
+});
+
+</script>
+
+    
     {% endblock  %}

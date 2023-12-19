@@ -143,19 +143,17 @@
             {% for store in stories %}
             <div class="card product-card product-list">
               {% if store.id %}
-                    <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="{% if request.user in store.wishlisted_by.all %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}">
-                      <a href="{% url 'order:add_to_wishlist' store_id=store.id %}">
-                      {% if request.user in store.wishlisted_by.all %}
-                        <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                        <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-store-id="{{ store.id }}" data-bs-placement="left" data-wishlist-url="{% url 'order:add_to_wishlist' store_id=store.id %}">
+                          {% if request.user in store.wishlisted_by.all %}
+                            <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                          {% else %}
+                            <i class="fa-regular fa-heart" style="color: #001d42;"></i>
+                          {% endif %}
+                        </button>
                       {% else %}
-                        <i class="fa-regular fa-heart" style="color: #001d42;"></i>
+                        <!-- Handle the case where p.id is empty or not valid -->
+                        <p>This product is not available.</p>
                       {% endif %}
-                      </a>
-                    </button>
-                  {% else %}
-                    <!-- Handle the case where p.id is empty or not valid -->
-                    <p>This product is not available.</p>
-                  {% endif %}
                 <span class="round-r badge bg-danger rounded-pill badge-shadow">{{store.get_price}}<br> off</span>
               <div class="d-sm-flex align-items-center"><a class="product-list-thumb" href="{{ store.get_absolute_url }}"><img src="{{store.image.url}}" alt="Product"></a>
                 <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="#">Sneakers &amp; Keds</a>
