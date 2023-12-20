@@ -95,6 +95,7 @@ def shop(request):
     sizes =Size.objects.all()
     total_products = store.count()
     wishlist_count =request.user.wishlist.count()
+    sorting_option = request.GET.get('sorting')
 
     q= request.GET.get('q')
     category=request.GET.get('category')
@@ -106,9 +107,29 @@ def shop(request):
     if category:
         store = store.filter(subcategory__category__slug=category)
 
+    if sorting_option == 'low_high_price':
+        # Sort stores by low to high price
+        store = store.order_by('price_field')  # Replace 'price_field' with the actual field used for price
+    elif sorting_option == 'high_low_price':
+        # Sort stores by high to low price
+        store = store.order_by('-price_field')  # Replace 'price_field' with the actual field used for price
+    elif sorting_option == 'average_rating':
+        # Sort stores by average rating
+        store = store.order_by('-rating')
+    elif sorting_option == 'a_z_order':
+        # Sort stores by name in ascending order
+        store = store.order_by('name')
+    elif sorting_option == 'z_a_order':
+        # Sort stores by name in descending order
+        store = store.order_by('-name')
+    # Add other sorting options as needed..
+        
     cart_items = request.session.get('cart', {})
     cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
     print("Cart Total Amount:", cart_total_amount)  # Add this line for debugging
+
+
+    #_________________-SEARCH-_________________________
 
     query =request.GET.get('query')
     if query:
@@ -299,6 +320,14 @@ class products_detailsViews(DetailView):
 
         user_profile = get_object_or_404(UserProfile, user=self.request.user)
         context['profile'] = user_profile
+
+        context['wishlist_count'] = self.request.user.wishlist.count()
+
+        cart_items = self.request.session.get('cart', {})
+        context['cart_items'] = cart_items
+
+        cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
+        context['cart_total_amount'] = cart_total_amount
 
         return context
     

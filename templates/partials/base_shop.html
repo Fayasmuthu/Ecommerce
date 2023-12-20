@@ -96,20 +96,19 @@
               <div class="col-lg-7 pe-lg-0">
                 <div class="product-gallery">
                   <div class="product-gallery-preview order-sm-2">
-                    <div class="product-gallery-preview-item active" id="first"><img class="image-zoom" src="{{store.image.url}}" data-zoom="{{store.image.url}}" alt="Product image">
+                    {% for preview_image in store.get_g_preview %}
+                    <div class="product-gallery-preview-item {% if forloop.first %}active{% endif %}" id="preview_{{ forloop.counter }}">
+                      <img class="image-zoom" src="{{ preview_image.image_preview.url }}" data-zoom="{{preview_image.image_preview.url }}" alt="Product image">
                       <div class="image-zoom-pane"></div>
                     </div>
-                    <div class="product-gallery-preview-item" id="second"><img class="image-zoom" src="{% static 'img/shop/single/gallery/02.jpg' %}" data-zoom="{% static 'img/shop/single/gallery/02.jpg' %}" alt="Product image">
-                      <div class="image-zoom-pane"></div>
-                    </div>
-                    <div class="product-gallery-preview-item" id="third"><img class="image-zoom" src="{% static 'img/shop/single/gallery/03.jpg' %}" data-zoom="{% static 'img/shop/single/gallery/03.jpg' %}" alt="Product image">
-                      <div class="image-zoom-pane"></div>
-                    </div>
-                    <div class="product-gallery-preview-item" id="fourth"><img class="image-zoom" src="{% static 'img/shop/single/gallery/04.jpg' %}" data-zoom="{% static 'img/shop/single/gallery/04.jpg' %}" alt="Product image">
-                      <div class="image-zoom-pane"></div>
-                    </div>
+                    {% endfor %}
                   </div>
-                  <div class="product-gallery-thumblist order-sm-1"><a class="product-gallery-thumblist-item active" href="#first"><img src="{{store.image.url}}" alt="Product thumb"></a><a class="product-gallery-thumblist-item" href="#second"><img src="img/shop/single/gallery/th02.jpg" alt="Product thumb"></a><a class="product-gallery-thumblist-item" href="#third"><img src="img/shop/single/gallery/th03.jpg" alt="Product thumb"></a><a class="product-gallery-thumblist-item" href="#fourth"><img src="img/shop/single/gallery/th04.jpg" alt="Product thumb"></a></div>
+                  <div class="product-gallery-thumblist order-sm-1">
+                    {% for preview_image in store.get_g_preview %}
+                        <a class="product-gallery-thumblist-item {% if forloop.first %}active{% endif %}" href="#preview_{{ forloop.counter }}">
+                          <img src="{{ preview_image.image_preview.url }}" alt="Product thumb"></a>
+                        {% endfor %}
+                  </div>
                 </div>
               </div>
               <!-- Product details-->
@@ -126,7 +125,19 @@
                             {% endfor %}
                       </div>
                       <span class="d-inline-block fs-sm text-body align-middle mt-1 ms-1">{{store.rating}} Reviews</span></a>
-                    <button class="btn-wishlist" type="button" data-bs-toggle="tooltip" title="Add to wishlist"><i class="ci-heart"></i></button>
+                    {% comment %} <button class="btn-wishlist" type="button" data-bs-toggle="tooltip" title="Add to wishlist"><i class="ci-heart"></i></button> {% endcomment %}
+                    {% if store.id %}
+                    <button class="btn btn-wishlist " data-store-id="{{ store.id }}" type="button" data-wishlist-url="{% url 'order:add_to_wishlist' store_id=store.id %}">
+                      {% if request.user in store.wishlisted_by.all %}
+                      <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                    {% else %}
+                      <i class="fa-regular fa-heart" style="color: #001d42;"></i>
+                    {% endif %}
+                  </button>  
+                  {% else %}
+                  <!-- Handle the case where store id is empty or not valid -->
+                  <p>This product is not available.</p>
+                  {% endif %}
                   </div>
                   <div class="mb-3"><span class="h3 fw-normal text-accent me-1">${{store.get_price}}.<small>99</small></span>
                     <del class="text-muted fs-lg me-3">${{store.get_original_price}}<small>00</small></del><span class="badge bg-danger badge-shadow align-middle mt-n2">Sale</span>
@@ -157,7 +168,7 @@
                       {% endif %}
                     {% endfor %}
                   </div>
-                  {% comment %} <div class="position-relative me-n4 mb-3">
+                  <div class="position-relative me-n4 mb-3 d-none">
                     <div class="form-check form-option form-check-inline mb-2">
                       <input class="form-check-input" type="radio" name="color" id="color1" data-bs-label="colorOptionText" value="Red/Dark blue/White" checked>
                       <label class="form-option-label rounded-circle" for="color1"><span class="form-option-color rounded-circle" style="background-image: url(img/shop/single/color-opt-1.png)"></span></label>
@@ -171,9 +182,9 @@
                       <label class="form-option-label rounded-circle" for="color3"><span class="form-option-color rounded-circle" style="background-image: url(img/shop/single/color-opt-3.png)"></span></label>
                     </div>
                     <div class="product-badge product-available mt-n1"><i class="ci-security-check"></i>Product available</div>
-                  </div> {% endcomment %}
+                  </div>
                   <form class="mb-grid-gutter">
-                    <div class="mb-3">
+                    <div class="mb-3 d-none">
                       <label class="fw-medium pb-1" for="product-size">Size:</label>
                       <select class="form-select" required id="product-size">
                         <option value="">Select size</option>

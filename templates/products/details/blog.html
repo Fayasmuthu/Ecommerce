@@ -188,4 +188,41 @@
         </div>
       </div>
     </main>
+
+    <script>
+      function updateSidebarCart(cartItems) {
+        var cartList = $('.border-bottom');
+        cartList.empty();
+    
+        // Iterate over the cart items and update the sidebar dynamically
+        $.each(cartItems, function (key, value) {
+            var listItem = $('<li>');
+            listItem.html(
+                '<div class="item_image">' +
+                '<img src="' + value.image + '" alt="Product Image">' +
+                '</div>' +
+                '<div class="item_content">' +
+                '<h4 class="item_title">' + value.name + '</h4>' +
+                '<span class="item_price">$' + value.price + '</span>' +
+                '</div>' +
+                '<a href="/order/item_clear/' + key + '"><button type="button" class="remove_btn"><i class="fal fa-trash-alt"></i></button></a>'
+            );
+            cartList.append(listItem);
+        });
+    }     
+    </script>
+    <ul class="cart_items_list ul_li_block mb_30 clearfix">
+      {% for key,value in request.session.cart.items %}
+      <li>
+        <div class="item_image">
+          <img src="{{value.image}}" alt="Getyootech - Gadgets Ecommerce Site Template">
+        </div>
+        <div class="item_content">
+          <h4 class="item_title">{{value.name}}</h4>
+          <span class="item_price">${{value.price}}</span>
+        </div>
+        <a href="{% url "order:item_clear" key %}"><button type="button" class="remove_btn"><i class="fal fa-trash-alt"></i></button></a>
+      </li>
+      {% endfor %}
     {% endblock  %}
+    

@@ -743,6 +743,7 @@ progress {
     --cz-gutter-y: 0;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     margin-top: calc(-1*var(--cz-gutter-y));
     margin-right: calc(-0.5*var(--cz-gutter-x));
     margin-left: calc(-0.5*var(--cz-gutter-x))

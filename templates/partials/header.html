@@ -21,20 +21,24 @@
                 <div class="col-lg-7 pe-lg-0">
                   <div class="product-gallery">
                     <div class="product-gallery-preview order-sm-2">
-                      <div class="product-gallery-preview-item active" id="first"><img class="image-zoom" src="{% static 'img/shop/single/gallery/05.jpg' %}" data-zoom="{% static 'img/shop/single/gallery/05.jpg' %}" alt="Product image">
+                      {% comment %} <div class="product-gallery-preview-item active" id="first"><img class="image-zoom" src="{% static 'img/shop/single/gallery/05.jpg' %}" data-zoom="{% static 'img/shop/single/gallery/05.jpg' %}" alt="Product image">
+                        <div class="image-zoom-pane"></div>
+                      </div> {% endcomment %}
+                      {% for preview_image in store.get_g_preview %}
+                      <div class="product-gallery-preview-item {% if forloop.first %}active{% endif %}" id="preview_{{ forloop.counter }}">
+                        <img class="image-zoom" src="{{ preview_image.image_preview.url }}" data-zoom="{{preview_image.image_preview.url }}" alt="Product image">
                         <div class="image-zoom-pane"></div>
                       </div>
-                      <div class="product-gallery-preview-item" id="second"><img class="image-zoom" src="{% static 'img/shop/single/gallery/06.jpg' %}" data-zoom="{% static 'img/shop/single/gallery/06.jpg' %}" alt="Product image">
-                        <div class="image-zoom-pane"></div>
-                      </div>
-                      <div class="product-gallery-preview-item" id="third"><img class="image-zoom" src="{% static 'img/shop/single/gallery/07.jpg' %}" data-zoom="{% static 'img/shop/single/gallery/07.jpg' %}" alt="Product image">
-                        <div class="image-zoom-pane"></div>
-                      </div>
-                      <div class="product-gallery-preview-item" id="fourth"><img class="image-zoom" src="{% static 'img/shop/single/gallery/08.jpg' %}" data-zoom="{% static 'img/shop/single/gallery/08.jpg' %}" alt="Product image">
-                        <div class="image-zoom-pane"></div>
-                      </div>
+                      {% endfor %}
                     </div>
-                    <div class="product-gallery-thumblist order-sm-1"><a class="product-gallery-thumblist-item active" href="#first"><img src="{% static 'img/shop/single/gallery/th05.jpg' %}" alt="Product thumb"></a><a class="product-gallery-thumblist-item" href="#second"><img src="img/shop/single/gallery/th06.jpg" alt="Product thumb"></a><a class="product-gallery-thumblist-item" href="#third"><img src="img/shop/single/gallery/th07.jpg" alt="Product thumb"></a><a class="product-gallery-thumblist-item" href="#fourth"><img src="img/shop/single/gallery/th08.jpg" alt="Product thumb"></a></div>
+                    <div class="product-gallery-thumblist order-sm-1">
+                      {% for preview_image in store.get_g_preview %}
+                      <a class="product-gallery-thumblist-item {% if forloop.first %}active{% endif %}" href="#preview_{{ forloop.counter }}">
+                      {% comment %} <a class="product-gallery-thumblist-item active" href="#first"> {% endcomment %}
+                        <img src="{{ preview_image.image_preview.url }}" alt="Product thumb"></a>
+                      </a>
+                      {% endfor %}
+                    </div>
                   </div>
                 </div>
                 <!-- Product details-->

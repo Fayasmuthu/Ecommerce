@@ -104,11 +104,25 @@
                           <option value="4">4</option>
                           <option value="5">5</option>
                         </select>
-                        <a href="{% url 'order:cart_add' store.id %}"><button class="btn btn-primary btn-shadow d-block w-100" type="button"><i class="ci-cart fs-lg me-2"></i>Add to Cart</button></a>
+                        <a  data-product-id="{{ store.id }}" class="add-to-cart-btn " href="{% url 'order:cart_add' store.id %}"><button class="btn btn-primary btn-shadow d-block w-100" type="button"><i class="ci-cart fs-lg me-2"></i>Add to Cart</button></a>
+                        <a class="add-to-cart-btn d-none" href="{% url "order:cart_detail" %} {% url 'order:cart_add' store.id %}"><button class="btn btn-primary btn-shadow d-block w-100" type="button"><i class="ci-cart fs-lg me-2"></i>Add to Cart</button></a>
                       </div>
                       <div class="d-flex mb-4">
                         <div class="w-100 me-3">
-                          <button class="btn btn-secondary d-block w-100" type="button"><i class="ci-heart fs-lg me-2"></i><span class='d-none d-sm-inline'>Add to </span>Wishlist</button>
+                          {% if store.id %}
+                          {% comment %} <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip"  data-store-id="{{ store.id }}" data-bs-placement="left" data-wishlist-url="{% url 'order:add_to_wishlist' store_id=store.id %}"> {% endcomment %}
+                          <button class="btn btn-secondary  d-block w-100" data-store-id="{{ store.id }}" type="button" data-wishlist-url="{% url 'order:add_to_wishlist' store_id=store.id %}">
+                            {% if request.user in store.wishlisted_by.all %}
+                            <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                          {% else %}
+                            <i class="fa-regular fa-heart" style="color: #001d42;"></i>
+                          {% endif %}
+                          <span class='d-none d-sm-inline ms-1'>Add to </span>Wishlist</button>
+                        </button>  
+                        {% else %}
+                        <!-- Handle the case where store id is empty or not valid -->
+                        <p>This product is not available.</p>
+                        {% endif %}
                         </div>
                         <div class="w-100">
                           <button class="btn btn-secondary d-block w-100" type="button"><i class="ci-compare fs-lg me-2"></i>Compare</button>
@@ -187,7 +201,18 @@
                     </select>
                     <button class="btn btn-primary btn-shadow me-2" type="button"><i class="ci-cart fs-lg me-sm-2"></i><span class="d-none d-sm-inline">Add to Cart</span></button>
                     <div class="me-2">
-                      <button class="btn btn-secondary btn-icon" type="button" data-bs-toggle="tooltip" title="Add to Wishlist"><i class="ci-heart fs-lg"></i></button>
+                      {% if store.id %}
+                      <button class="btn btn-secondary  d-block w-100" data-store-id="{{ store.id }}" type="button" data-wishlist-url="{% url 'order:add_to_wishlist' store_id=store.id %}">
+                        {% if request.user in store.wishlisted_by.all %}
+                        <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                      {% else %}
+                        <i class="fa-regular fa-heart" style="color: #001d42;"></i>
+                      {% endif %}
+                    </button>  
+                    {% else %}
+                    <!-- Handle the case where store id is empty or not valid -->
+                    <p>This product is not available.</p>
+                    {% endif %}
                     </div>
                     <div>
                       <button class="btn btn-secondary btn-icon" type="button" data-bs-toggle="tooltip" title="Compare"><i class="ci-compare fs-lg"></i></button>
@@ -258,7 +283,20 @@
                     </select>
                     <button class="btn btn-primary btn-shadow me-2" type="button"><i class="ci-cart fs-lg me-sm-2"></i><span class="d-none d-sm-inline">Add to Cart</span></button>
                     <div class="me-2">
-                      <button class="btn btn-secondary btn-icon" type="button" data-bs-toggle="tooltip" title="Add to Wishlist"><i class="ci-heart fs-lg"></i></button>
+                      {% if store.id %}
+                      {% comment %} <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip"  data-store-id="{{ store.id }}" data-bs-placement="left" data-wishlist-url="{% url 'order:add_to_wishlist' store_id=store.id %}"> {% endcomment %}
+                      <button class="btn btn-secondary  d-block w-100" data-store-id="{{ store.id }}" type="button" data-wishlist-url="{% url 'order:add_to_wishlist' store_id=store.id %}">
+                        {% if request.user in store.wishlisted_by.all %}
+                        <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                      {% else %}
+                        <i class="fa-regular fa-heart" style="color: #001d42;"></i>
+                      {% endif %}
+                    </button>
+                    </button>  
+                    {% else %}
+                    <!-- Handle the case where store id is empty or not valid -->
+                    <p>This product is not available.</p>
+                    {% endif %}
                     </div>
                     <div>
                       <button class="btn btn-secondary btn-icon" type="button" data-bs-toggle="tooltip" title="Compare"><i class="ci-compare fs-lg"></i></button>
@@ -411,7 +449,18 @@
             {% for store in store.related_store %}
             <div>
               <div class="card product-card card-static">
-                <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to wishlist"><i class="ci-heart"></i></button>
+                {% if store.id %}
+                    <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip"  data-store-id="{{ store.id }}" data-bs-placement="left" data-wishlist-url="{% url 'order:add_to_wishlist' store_id=store.id %}">
+                      {% if request.user in store.wishlisted_by.all %}
+                        <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                      {% else %}
+                        <i class="fa-regular fa-heart" style="color: #001d42;"></i>
+                      {% endif %}
+                    </button>  
+                  {% else %}
+                      <!-- Handle the case where store id is empty or not valid -->
+                     <p>This product is not available.</p>
+                  {% endif %}
                 <a class="card-img-top d-block overflow-hidden" href="{{store.get_absolute_url}}"><img src="{{store.image.url}}" alt="Product"></a>
                 <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="#">Smartwatches</a>
                   <h3 class="product-title fs-sm"><a href="javascript:void(0)">{{store.name}}</a></h3>
@@ -428,7 +477,10 @@
             <!-- Product-->
             <div>
               <div class="card product-card card-static">
-                <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to wishlist"><i class="ci-heart"></i></button><a class="card-img-top d-block overflow-hidden" href="javascript:void(0)"><img src="{% static 'img/shop/catalog/67.jpg' %}" alt="Product"></a>
+                <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to wishlist">
+                  <i class="ci-heart"></i>
+                </button>
+                <a class="card-img-top d-block overflow-hidden" href="javascript:void(0)"><img src="{% static 'img/shop/catalog/67.jpg' %}" alt="Product"></a>
                 <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="javascript:void(0)">Smartwatches</a>
                   <h3 class="product-title fs-sm"><a href="javascript:void(0)">Heart Rate &amp; Activity Tracker</a></h3>
                   <div class="d-flex justify-content-between">
@@ -523,4 +575,101 @@
         </div>
       </div>
     </main>
+
+    <script>
+      $(document).ready(function() {
+          $('.add-to-cart-btn').click(function(event) {
+              event.preventDefault();
+              var productId = $(this).data('product-id');
+              
+              $.ajax({
+                  type: 'POST',
+                  url: '{% url "order:cart_add" 0 %}'.replace('0', productId),
+                  dataType: 'json',
+                  beforeSend: function(xhr) {
+                      xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                  },
+                  success: function(data) {
+                      // Update cart icon count or total amount displayed on the page
+                      $('.cart_num_count').text(data.cart_count);
+                      $('.cart-total-amount').text('$' + data.cart_total_amount);
+                    
+                  },
+                  error: function(xhr, errmsg, err) {
+                      console.log(errmsg);
+                  }
+              });
+          });
+      });
+      </script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('.btn-secondary').click(function(e) {
+      e.preventDefault();
+      var storeId = $(this).data('store-id');
+      var button = $(this); // Store the button reference for later use
+      $.ajax({
+        type: 'GET',
+        url: '/add_to_wishlist/' + storeId + '/',
+        dataType: 'json',
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+        },
+        success: function(data) {
+          console.log(data); // Check if 'wished' is present and holds the correct value
+          $('.wishlist_num_count').text(data.wishlist_count);
+          // Handle success, update UI based on 'data' response
+          if (data.wished) {
+            // Item was added to wishlist
+            button.find('i').removeClass('fa-regular').addClass('fa-solid').css('color', '#ff0000');
+            button.attr('title', 'Remove from Wishlist');
+          } else {
+            // Item was removed from wishlist
+            button.find('i').removeClass('fa-solid').addClass('fa-regular').css('color', '#001d42');
+            button.attr('title', 'Add to Wishlist');
+          }
+        },
+        error: function(xhr, textStatus, errorThrown) {
+          // Handle error
+        }
+      });
+    });
+  });
+  </script>
+
+  <script>
+    $(document).ready(function() {
+      $('.btn-wishlist').click(function(e) {
+        e.preventDefault();
+        var storeId = $(this).data('store-id');
+        var button = $(this); // Store the button reference for later use
+        $.ajax({
+          type: 'GET',
+          url: '/add_to_wishlist/' + storeId + '/',
+          dataType: 'json',
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+          },
+          success: function(data) {
+            console.log(data); // Check if 'wished' is present and holds the correct value
+            $('.wishlist_num_count').text(data.wishlist_count);
+            // Handle success, update UI based on 'data' response
+            if (data.wished) {
+              // Item was added to wishlist
+              button.find('i').removeClass('fa-regular').addClass('fa-solid').css('color', '#ff0000');
+              button.attr('title', 'Remove from Wishlist');
+            } else {
+              // Item was removed from wishlist
+              button.find('i').removeClass('fa-solid').addClass('fa-regular').css('color', '#001d42');
+              button.attr('title', 'Add to Wishlist');
+            }
+          },
+          error: function(xhr, textStatus, errorThrown) {
+            // Handle error
+          }
+        });
+      });
+    });
+    </script>
     {% endblock  %}
