@@ -113,7 +113,6 @@ def add_to_wishlist(request, store_id):
         response_data = {
                     'wished': wished,
                     'wishlist_count': wishlist_count,
-                    'wishlist_count': wishlist_count,
                     'message': success_message,
                 }
     # return redirect('order:wishlist_page')
@@ -143,6 +142,8 @@ def wishlist_page(request):
 
 @login_required
 def cart_add(request, id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'message': 'User not authenticated'}, status=401)
     cart = Cart(request)
     product = Store.objects.get(id=id)
     cart.add(product=product)

@@ -115,15 +115,13 @@ def shop(request):
     group_category =Groupcategory.objects.all()
     categories = Category.objects.all()  
     subcategory = Subcategory.objects.all()
-    store = Store.objects.all()
+    store = Store.objects.filter(status='Publish')
     colors=Color.objects.all()
     brands =Brand.objects.annotate(store_count=Count('brand__name'))
     sizes =Size.objects.all()
     total_products = store.count()
     # wishlist_count =request.user.wishlist.count()
-    # sorting_option = request.GET.get('sorting')
-    ATOZID=request.GET.get('ATOZ')
-
+    sorting_option = request.GET.get('sorting')
     q= request.GET.get('q')
     category=request.GET.get('category')
 
@@ -134,28 +132,26 @@ def shop(request):
     if category:
         store = store.filter(subcategory__category__slug=category)
 
-    # if sorting_option == 'low_high_price':
-    # # Sort stores by low to high price
-    #     store = store.annotate(lowest_price=Min('availablesize__discount')).order_by('lowest_price')
-    # elif sorting_option == 'high_low_price':
-    # # Sort stores by high to low price
-    #     store = store.annotate(highest_price=Max('get_sizes__discount')).order_by('-highest_price') # Replace 'price_field' with the actual field used for price
-    # elif sorting_option == 'average_rating':
-    #     # Sort stores by average rating
-    #     store = store.order_by('-rating')
-    # elif sorting_option == 'a_z_order':
-    #     # Sort stores by name in ascending order
-    #     store = store.order_by('name')
-    # elif sorting_option == 'z_a_order':
-    #     # Sort stores by name in descending order
-    #     store = store.order_by('-name')
-    # # Add other sorting options as needed..
-    if ATOZID:
-        store=store.filter(status='Publish').order_by('name')
+    if sorting_option == 'atoz':
+         store = Store.objects.filter(status='Publish').order_by('name')
+    if sorting_option == 'ztoa':
+        store = Store.objects.filter(status='Publish').order_by('-name')
+    if sorting_option == 'high-low-price':
+        store = Store.objects.filter(status='Publish').annotate(
+            min_discount=Min('store__orginal_price')
+        ).order_by('min_discount')
+    if sorting_option == 'low-high-price':
+        store = Store.objects.filter(status='Publish').annotate(
+            min_discount=Min('store__orginal_price')
+        ).order_by('-min_discount')
+    if sorting_option == 'popularity':
+        store = Store.objects.filter(status='Publish').order_by('-wishlisted_by__count')
+    if sorting_option == 'rating':
+        store = Store.objects.filter(status='Publish').order_by('-rating')
         
     cart_items = request.session.get('cart', {})
     cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
-    print("Cart Total Amount:", cart_total_amount)  # Add this line for debugging
+    print("Cart Total Amount:", cart_total_amount) 
 
 
 
@@ -213,6 +209,7 @@ def shop_list(request):
     sizes =Size.objects.all()
     total_products = store.count()
     wishlist_count =request.user.wishlist.count()
+    sorting_option = request.GET.get('sorting')
 
 
     q= request.GET.get('q')
@@ -224,6 +221,24 @@ def shop_list(request):
 
     if category:
         store = store.filter(subcategory__category__slug=category)
+
+    if sorting_option == 'atoz':
+         store = Store.objects.filter(status='Publish').order_by('name')
+    if sorting_option == 'ztoa':
+        store = Store.objects.filter(status='Publish').order_by('-name')
+    if sorting_option == 'high-low-price':
+        store = Store.objects.filter(status='Publish').annotate(
+            min_discount=Min('store__orginal_price')
+        ).order_by('min_discount')
+    if sorting_option == 'low-high-price':
+        store = Store.objects.filter(status='Publish').annotate(
+            min_discount=Min('store__orginal_price')
+        ).order_by('-min_discount')
+    if sorting_option == 'popularity':
+        store = Store.objects.filter(status='Publish').order_by('-wishlisted_by__count')
+    if sorting_option == 'rating':
+        store = Store.objects.filter(status='Publish').order_by('-rating')
+        
 
     cart_items = request.session.get('cart', {})
     cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())

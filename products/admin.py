@@ -69,7 +69,7 @@ class offer_counterInline(admin.TabularInline):
    
 @admin.register(Store)
 class StoreAdmin(admin.ModelAdmin):
-    list_display = ('name', 'subcategory',)
+    list_display = ('name', 'subcategory','status','stock')
     prepopulated_fields = {'slug': ('name',)}
     list_filter = ('subcategory', 'name',)
     inlines = [ProductImageInline, AvailableSizeInline,Offer_saleInline,
@@ -78,8 +78,10 @@ class StoreAdmin(admin.ModelAdmin):
     search_fields = (
         "name",
         'subcategory__name',
+        'status',
+        'stock'
     )
-    list_editable = ('subcategory',)
+    list_editable = ('subcategory','status','stock')
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):

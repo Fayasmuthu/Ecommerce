@@ -641,11 +641,16 @@
       
         },
         error: function(xhr, textStatus, errorThrown) {
-          // Handle error
+          console.log(xhr.status); // Log the status to check if it's 401
           if (xhr.status == 401) {
-            window.location.replace('/accounts/login/');
+              console.log("Redirecting to login page...");
+              window.location.replace('/accounts/login/');
+          } else {
+              // Handle other errors if needed
+              console.log("Another error occurred:", textStatus);
+              // You can perform additional actions or logging here
           }
-        }
+      }
       });
     });
     
@@ -679,30 +684,34 @@
                 // Update cart icon count or total amount displayed on the page
                 $('.cart_num_count').text(data.cart_count);
                 $('.cart-total-amount').text('$' + data.cart_total_amount);
+
+                
                 // Call showAlert function with appropriate parameters
-                // showAlert('Cart updated successfully!', 'alert-success');
                 showAlert(data.message, "alert-success");
             },
-            error: function(xhr, errmsg, err) {
-                console.log(errmsg);
-                // Call showAlert function for error handling
-                if (data.status == '401') {window.location.href = '/accounts/login/';
-                showAlert('Error updating cart. Please try again.', 'alert-danger');
-                                  // Show a custom message
-            }  
-            }
+            error: function(xhr, status, error) {
+              console.log(error);
+              // Handle error, show an alert, etc.
+              if (xhr.status === 401) {
+                  // Redirect to the login page if not authenticated
+                  window.location.href = '/accounts/login/';
+              } else {
+                  showAlert('Error adding to wishlist', "alert-danger");
+              }
+          }
         });
     });
-    function showAlert(message, alertClass) {
-      var alertContainer = $("#alert-container");
-      var alertDiv = $("<div>").addClass("alert " + alertClass).text(message);
-      alertContainer.append(alertDiv);
 
-      // Automatically hide the alert after 5 seconds
-      setTimeout(function () {
-          alertDiv.remove();
-      }, 800);
-  }
+    function showAlert(message, alertClass) {
+        var alertContainer = $("#alert-container");
+        var alertDiv = $("<div>").addClass("alert " + alertClass).text(message);
+        alertContainer.append(alertDiv);
+
+        // Automatically hide the alert after 5 seconds
+        setTimeout(function() {
+            alertDiv.remove();
+        }, 5000);
+    }
 });
 </script>
 

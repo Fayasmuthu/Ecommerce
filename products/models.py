@@ -111,8 +111,8 @@ class Store(models.Model):
     rating =models.PositiveIntegerField(
         validators=[MaxValueValidator(5)],default=5,verbose_name='product Rating (max:5)'
     )
-    stock =models.CharField(choices=STOCK, max_length=200)
-    status =models.CharField(choices=STATUS,max_length=200)
+    stock =models.CharField(choices=STOCK, max_length=200,default='IN STOCK')
+    status =models.CharField(choices=STATUS,max_length=200,default='Publish' )
     is_best_seller = models.BooleanField(default=False)
     is_new_arrival = models.BooleanField(default=False)
     is_top_rated = models.BooleanField(default=False)
