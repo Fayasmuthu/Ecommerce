@@ -22,7 +22,7 @@
           <!-- Toolbar-->
           <div class="navbar-toolbar d-flex flex-shrink-0 align-items-center">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"><span class="navbar-toggler-icon"></span></button>
-            <a class="navbar-tool navbar-stuck-toggler" href="javascript:void(0)"><span class="navbar-tool-tooltip">Toggle menu</span>
+            <a class="navbar-tool navbar-stuck-toggler" href="#signin-modal" data-bs-toggle="modal"><span class="navbar-tool-tooltip">Toggle menu</span>
               <div class="navbar-tool-icon-box"><i class="navbar-tool-icon ci-menu"></i></div></a><a class="navbar-tool ms-1 ms-lg-0 me-n1 me-lg-2" href="#signin-modal" data-bs-toggle="modal">
                 {% if profile.image %}
                 <img class="rounded-circle mx-1" src="{{ profile.image.url }}" width="30" alt="Susan Gardner">
@@ -38,7 +38,7 @@
             </a>
            
 
-            <div class="navbar-tool dropdown ms-3"><span class="navbar-tool-label wishlist_num_count wishlist-count">{{ wishlist_count }}</span><a class="dropdown-item" href="{% url 'order:wishlist_page' %}"><i class="ci-heart text-muted me-2"></i></a></div>
+            <div class="navbar-tool dropdown ms-3"><span class="navbar-tool-label wishlist_num_count wishlist-count ">{{ wishlist_count }}</span><a class="dropdown-item" href="{% url 'order:wishlist_page' %}"><i class="ci-heart text-muted me-2"></i></a></div>
             <div class="navbar-tool dropdown ms-3">
               <a class="navbar-tool-icon-box bg-secondary dropdown-toggle" href="{% url "order:cart_detail" %}">
                 <span class="navbar-tool-label cart_num_count ">{{ cart_items|length }}</span>

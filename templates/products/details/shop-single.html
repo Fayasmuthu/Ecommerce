@@ -3,6 +3,8 @@
 {% load course_tags %}
 
 {% block content_detail %}
+<div id="alert-container">  </div>
+
       <!-- Custom page title-->
       <div class="page-title-overlap bg1-dark pt-4">
         <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
@@ -368,6 +370,7 @@
                     <div class="product-review pb-4 mb-4 border-bottom">
                       <div class="d-flex mb-3">
                         <div class="d-flex align-items-center me-4 pe-2"><img class="rounded-circle" src="{% static 'img/shop/reviews/01.jpg' %}" width="50" alt="Rafael Marquez">
+                          
                           <div class="ps-3">
                             <h6 class="fs-sm mb-0">{{review.name}}</h6>
                             <span class="fs-ms text-muted">{{review.created_at}}</span>
@@ -462,6 +465,9 @@
                      <p>This product is not available.</p>
                   {% endif %}
                 <a class="card-img-top d-block overflow-hidden" href="{{store.get_absolute_url}}"><img src="{{store.image.url}}" alt="Product"></a>
+                {% for i in store.get_offer_sale %}
+                <img src="{{i.image.url}}" alt="" class="productssale" >    
+              {% endfor %}
                 <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="#">Smartwatches</a>
                   <h3 class="product-title fs-sm"><a href="javascript:void(0)">{{store.name}}</a></h3>
                   <div class="d-flex justify-content-between">
@@ -638,7 +644,7 @@
   });
   </script>
 
-  <script>
+  {% comment %} <script>
     $(document).ready(function() {
       $('.btn-wishlist').click(function(e) {
         e.preventDefault();
@@ -671,5 +677,56 @@
         });
       });
     });
-    </script>
+    </script> {% endcomment %}
+<script>
+    $(document).ready(function() {
+      $('.btn-secondary').click(function(e) {
+        e.preventDefault();
+        var storeId = $(this).data('store-id');
+        var button = $(this); // Store the button reference for later use
+        $.ajax({
+          type: 'GET',
+          url: '/add_to_wishlist/' + storeId + '/',
+          dataType: 'json',
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+          },
+          success: function(data) {
+            console.log(data); // Check if 'wished' is present and holds the correct value
+            $('.wishlist_num_count').text(data.wishlist_count);
+            // Handle success, update UI based on 'data' response
+            if (data.wished) {
+              // Item was added to wishlist
+              button.find('i').removeClass('fa-regular').addClass('fa-solid').css('color', '#ff0000');
+              button.attr('title', 'Remove from Wishlist');
+              //showAlert(data.message, "Remove from Wishlist");
+            } else {
+              // Item was removed from wishlist
+              button.find('i').removeClass('fa-solid').addClass('fa-regular').css('color', '#001d42');
+              button.attr('title', 'Add to Wishlist');
+            }
+            showAlert(data.message, "alert-success");
+  
+          },
+          error: function(xhr, textStatus, errorThrown) {
+            // Handle error
+            if (xhr.status == 401) {
+              window.location.replace('/accounts/login/');
+            }
+          }
+        });
+      });
+      
+      function showAlert(message, alertClass) {
+        var alertContainer = $("#alert-container");
+        var alertDiv = $("<div>").addClass("alert " + alertClass).text(message);
+        alertContainer.append(alertDiv);
+      
+        // Automatically hide the alert after 5 seconds
+        setTimeout(function () {
+          alertDiv.remove();
+        }, 800);
+      }
+    });
+  </script>
     {% endblock  %}

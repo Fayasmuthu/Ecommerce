@@ -108,8 +108,19 @@ def add_to_wishlist(request, store_id):
         store.wishlisted_by.add(request.user)
         wished = True
     wishlist_count = request.user.wishlist.count()
+    success_message = f"{store.name} added to the wishlist successfully!"
+    if wished:
+        response_data = {
+                    'wished': wished,
+                    'wishlist_count': wishlist_count,
+                    'wishlist_count': wishlist_count,
+                    'message': success_message,
+                }
     # return redirect('order:wishlist_page')
-    return JsonResponse({'wished': wished, 'wishlist_count': wishlist_count})
+        return JsonResponse(response_data)
+    else:
+        return JsonResponse({'message': 'Remove from Wishlist'})
+    
 
 
 @login_required
@@ -138,10 +149,14 @@ def cart_add(request, id):
     
     cart_items = request.session.get('cart', {})
     cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
+
+    # Customize the success message
+    success_message = f"{product.name} added to the cart successfully!"
     
     response_data = {
         'cart_total_amount': cart_total_amount,
         'cart_count': len(cart_items),
+        'message': success_message,
     }
     return JsonResponse(response_data)
 

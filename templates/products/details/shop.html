@@ -3,7 +3,9 @@
 {% block title %}Shop{% endblock %}
 {% load course_tags %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 {% block content_detail %}
+<div id="alert-container">  </div>
       <!-- Page Title-->
       <div class="page-title-overlap bg1-dark pt-4">
         <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
@@ -119,18 +121,15 @@
             <div class="d-flex justify-content-center justify-content-sm-between align-items-center pt-2 pb-4 pb-sm-5">
               <div class="d-flex flex-wrap">
                 <div class="d-flex align-items-center flex-nowrap me-3 me-sm-4 pb-3">
-                  <form action="{% url 'products:shop' %}" method="GET">
                   <label class="text-light opacity-75 text-nowrap fs-sm me-2 d-none d-sm-block" for="sorting">Sort by:</label>
                   <select class="form-select" id="sorting" name="sorting">
-                    <option value="popularity">Popularity</option>
-                    <option value="low_high_price">Low - High Price</option>
-                    <option value="high_low_price">High - Low Price</option>
-                    <option value="average_rating">Average Rating</option>
-                    <option value="a_z_order">A - Z Order</option>
-                    <option value="z_a_order">Z - A Order</option>
+                    <option > <a href="">Popularity</a></option>
+                    <option ><a href="">A - Z Order</a></option>
+                    <option ><a href="">Z - A Order</a></option>
+                    <option ><a href="">Average Rating</a></option>
+                    <option ><a href="">High - Low Price</a></option>
+                    <option ><a href="">Low - High Price</a></option>
                   </select>
-                  <button type="submit">Sort</button>
-                </form>
                   <span class="fs-sm text-light opacity-75 text-nowrap ms-2 d-none d-md-block">of {{total_products}} products</span>
                 </div>
               </div>
@@ -153,17 +152,18 @@
               <div class="col-md-4 col-sm-6 px-2 mb-4">
                 <div class="card product-card">
                   {% if store.id %}
-                    <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip"  data-store-id="{{ store.id }}" data-bs-placement="left" data-wishlist-url="{% url 'order:add_to_wishlist' store_id=store.id %}">
+                    <button class="btn-wishlist btn-sm"  type="button" data-bs-toggle="tooltip"  data-store-id="{{ store.id }}" data-bs-placement="left" data-wishlist-url="{% url 'order:add_to_wishlist' store_id=store.id %}">
                       {% if request.user in store.wishlisted_by.all %}
                         <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
                       {% else %}
                         <i class="fa-regular fa-heart" style="color: #001d42;"></i>
                       {% endif %}
-                    </button>  
+                    </button> 
                   {% else %}
                       <!-- Handle the case where store id is empty or not valid -->
                      <p>This product is not available.</p>
-                  {% endif %}
+              {% endif %}
+
                   <span class="round-r badge bg-danger rounded-pill badge-shadow">{{store.get_price}}<br> off</span>
 
                   <a class="card-img-top d-block overflow-hidden" href="{{ store.get_absolute_url }}"><img src="{{store.image.url}}" alt="Product"></a>
@@ -240,7 +240,8 @@
 
 
 <!-- JavaScript using jQuery for the AJAX request -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% comment %} <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> {% endcomment %}
 <script>
   $(document).ready(function() {
     $('.btn-wishlist').click(function(e) {
@@ -262,20 +263,39 @@
             // Item was added to wishlist
             button.find('i').removeClass('fa-regular').addClass('fa-solid').css('color', '#ff0000');
             button.attr('title', 'Remove from Wishlist');
+            //showAlert(data.message, "Remove from Wishlist");
           } else {
             // Item was removed from wishlist
             button.find('i').removeClass('fa-solid').addClass('fa-regular').css('color', '#001d42');
             button.attr('title', 'Add to Wishlist');
           }
+          showAlert(data.message, "alert-success");
+
         },
         error: function(xhr, textStatus, errorThrown) {
           // Handle error
+          if (xhr.status == 401) {
+            window.location.replace('/accounts/login/');
+          }
         }
       });
     });
+    
+    function showAlert(message, alertClass) {
+      var alertContainer = $("#alert-container");
+      var alertDiv = $("<div>").addClass("alert " + alertClass).text(message);
+      alertContainer.append(alertDiv);
+    
+      // Automatically hide the alert after 5 seconds
+      setTimeout(function () {
+        alertDiv.remove();
+      }, 800);
+    }
   });
-  </script>
-<script>
+</script>
+
+
+<script type="text/javascript">
   $(document).ready(function() {
       $('.add-to-cart-btn').click(function(event) {
           event.preventDefault();
@@ -292,37 +312,36 @@
                   // Update cart icon count or total amount displayed on the page
                   $('.cart_num_count').text(data.cart_count);
                   $('.cart-total-amount').text('$' + data.cart_total_amount);
-                
+                  // Call showAlert function with appropriate parameters
+                  // showAlert('Cart updated successfully!', 'alert-success');
+                  showAlert(data.message, "alert-success");
               },
               error: function(xhr, errmsg, err) {
                   console.log(errmsg);
+                  // Call showAlert function for error handling
+                  if (data.status == '401') {window.location.href = '/accounts/login/';
+                  showAlert('Error updating cart. Please try again.', 'alert-danger');
+                                    // Show a custom message
+              }  
               }
           });
       });
+      function showAlert(message, alertClass) {
+        var alertContainer = $("#alert-container");
+        var alertDiv = $("<div>").addClass("alert " + alertClass).text(message);
+        alertContainer.append(alertDiv);
+
+        // Automatically hide the alert after 5 seconds
+        setTimeout(function () {
+            alertDiv.remove();
+        }, 800);
+    }
   });
-  </script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    $(document).ready(function() {
-      $('#sorting').change(function() {
-          var selectedSort = $(this).val();
-  
-          $.ajax({
-              type: 'GET',
-              url: '{% url "products:shop" %}', // Update the URL to match your view
-              data: {
-                  sort_criteria: selectedSort
-              },
-              dataType: 'json',
-              success: function(data) {
-                  $('#filteredStore').html(data.html_stores); // Update the HTML content with the received data
-              },
-              error: function(xhr, textStatus, errorThrown) {
-                  // Handle error
-              }
-          });
-      });
-    });
-  </script>
+
+</script> 
+
+
+
+
   
     {% endblock  %}

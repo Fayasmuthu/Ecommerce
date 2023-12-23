@@ -13,12 +13,17 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count
 from order.models import UserProfile
 from django.shortcuts import get_object_or_404
+from django.db.models import Min, Max
 
 
-
-# Create your views here.
 def index(request):
-    profile = UserProfile.objects.get(user=request.user)
+    profile = None
+    wishlist_count = 0
+
+    if request.user.is_authenticated:
+        profile = UserProfile.objects.get(user=request.user)
+        wishlist_count = request.user.wishlist.count()
+
     main_category = Maincategory.objects.all()
     group_category =Groupcategory.objects.all()
     categories = Category.objects.all()  
@@ -35,7 +40,7 @@ def index(request):
     best_seller =Store.objects.filter(is_best_seller=True)[:8]
     new_arrival =Store.objects.filter(is_new_arrival=True)[:8]
     top_rated =Store.objects.filter(is_top_rated=True)[:8]
-    wishlist_count =request.user.wishlist.count()
+    # wishlist_count =request.user.wishlist.count()
 
 
     category=request.GET.get('category')
@@ -84,7 +89,28 @@ def index(request):
 
 
 def shop(request):
-    profile = UserProfile.objects.get(user=request.user)
+    # if request.user.is_authenticated:
+    #     try:
+    #         profile = UserProfile.objects.get(user=request.user)
+    #     except UserProfile.DoesNotExist:
+    #         profile = None
+
+    #     wishlist_count = request.user.wishlist.count()
+
+    #     cart_items = request.session.get('cart', {})
+    #     cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
+    # else:
+    #     profile = None
+    #     wishlist_count = 0
+    #     cart_items = {}
+    #     cart_total_amount = 0
+    profile = None
+    wishlist_count = 0
+
+    if request.user.is_authenticated:
+        profile = UserProfile.objects.get(user=request.user)
+        wishlist_count = request.user.wishlist.count()
+        
     main_category = Maincategory.objects.all()
     group_category =Groupcategory.objects.all()
     categories = Category.objects.all()  
@@ -94,8 +120,9 @@ def shop(request):
     brands =Brand.objects.annotate(store_count=Count('brand__name'))
     sizes =Size.objects.all()
     total_products = store.count()
-    wishlist_count =request.user.wishlist.count()
-    sorting_option = request.GET.get('sorting')
+    # wishlist_count =request.user.wishlist.count()
+    # sorting_option = request.GET.get('sorting')
+    ATOZID=request.GET.get('ATOZ')
 
     q= request.GET.get('q')
     category=request.GET.get('category')
@@ -107,26 +134,29 @@ def shop(request):
     if category:
         store = store.filter(subcategory__category__slug=category)
 
-    if sorting_option == 'low_high_price':
-        # Sort stores by low to high price
-        store = store.order_by('price_field')  # Replace 'price_field' with the actual field used for price
-    elif sorting_option == 'high_low_price':
-        # Sort stores by high to low price
-        store = store.order_by('-price_field')  # Replace 'price_field' with the actual field used for price
-    elif sorting_option == 'average_rating':
-        # Sort stores by average rating
-        store = store.order_by('-rating')
-    elif sorting_option == 'a_z_order':
-        # Sort stores by name in ascending order
-        store = store.order_by('name')
-    elif sorting_option == 'z_a_order':
-        # Sort stores by name in descending order
-        store = store.order_by('-name')
-    # Add other sorting options as needed..
+    # if sorting_option == 'low_high_price':
+    # # Sort stores by low to high price
+    #     store = store.annotate(lowest_price=Min('availablesize__discount')).order_by('lowest_price')
+    # elif sorting_option == 'high_low_price':
+    # # Sort stores by high to low price
+    #     store = store.annotate(highest_price=Max('get_sizes__discount')).order_by('-highest_price') # Replace 'price_field' with the actual field used for price
+    # elif sorting_option == 'average_rating':
+    #     # Sort stores by average rating
+    #     store = store.order_by('-rating')
+    # elif sorting_option == 'a_z_order':
+    #     # Sort stores by name in ascending order
+    #     store = store.order_by('name')
+    # elif sorting_option == 'z_a_order':
+    #     # Sort stores by name in descending order
+    #     store = store.order_by('-name')
+    # # Add other sorting options as needed..
+    if ATOZID:
+        store=store.filter(status='Publish').order_by('name')
         
     cart_items = request.session.get('cart', {})
     cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
     print("Cart Total Amount:", cart_total_amount)  # Add this line for debugging
+
 
 
     #_________________-SEARCH-_________________________
@@ -316,19 +346,34 @@ class products_detailsViews(DetailView):
         context['star_counts'] = star_counts
         context['stars'] = range(1, 6) 
         context['overall_rating'] = overall_rating
-        context['profile']=UserProfile
+        # context['profile']=UserProfile
 
-        user_profile = get_object_or_404(UserProfile, user=self.request.user)
-        context['profile'] = user_profile
+        # user_profile = get_object_or_404(UserProfile, user=self.request.user)
+        # context['profile'] = user_profile
 
-        context['wishlist_count'] = self.request.user.wishlist.count()
+        # context['wishlist_count'] = self.request.user.wishlist.count()
+
+        # cart_items = self.request.session.get('cart', {})
+        # context['cart_items'] = cart_items
+
+        # cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
+        # context['cart_total_amount'] = cart_total_amount
+
+        # if self.request.user.is_authenticated:
+        #     user_profile = get_object_or_404(UserProfile, user=self.request.user)
+        #     context['profile'] = user_profile
+        #     context['wishlist_count'] = self.request.user.wishlist.count()
+
+        if self.request.user.is_authenticated:
+            user_profile = get_object_or_404(UserProfile, user=self.request.user)
+            context['profile'] = user_profile
+            context['wishlist_count'] = self.request.user.wishlist.count()
 
         cart_items = self.request.session.get('cart', {})
         context['cart_items'] = cart_items
 
         cart_total_amount = sum(item['price'] * item['quantity'] for item in cart_items.values())
         context['cart_total_amount'] = cart_total_amount
-
         return context
     
     def post(self,request,*args, **kwargs):
