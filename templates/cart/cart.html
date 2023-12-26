@@ -3,7 +3,7 @@
 {% load cart_tag %}
 {% block content_detail %}
       <!-- Page Title-->
-      <div class="page-title-overlap bg-dark pt-4">
+      <div class="page-title-overlap bg1-dark pt-4">
         <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
           <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
             <nav aria-label="breadcrumb">
@@ -25,8 +25,10 @@
           <!-- List of items-->
           <section class="col-lg-8 cart-items">
             <div class="d-flex justify-content-between align-items-center pt-3 pb-4 pb-sm-5 mt-1">
-              <h2 class="h6 text-light mb-0">Products</h2><a class="btn btn-outline-primary btn-sm ps-2" href="{% url "products:shop" %}"><i class="ci-arrow-left me-2"></i>Continue shopping</a>
+              <h2 class="h6 text-light mb-0">Products</h2>
+              <a class="btn btn-outline-primary btn-sm ps-2 text-light " href="{% url "products:shop" %}"><i class="ci-arrow-left me-2"></i>Continue shopping</a>
             </div>
+            {% if  request.session.cart  %}
             <!-- Item-->
             {% for key,value in request.session.cart.items %}
             <div class="d-sm-flex justify-content-between align-items-center my-2 pb-3 border-bottom" id="item-{{ value.product_id }}">
@@ -56,8 +58,9 @@
             </div>
             {% endfor %}
             <button class="btn btn-outline-accent d-block w-100 mt-4" type="button"><i class="ci-loading fs-base me-2"></i>Update cart</button>
-            <a href="{{ store.get_absolute_url }}">fdssdfds</a>
+      
           </section>
+          
           <!-- Sidebar-->
           <aside class="col-lg-4 pt-4 pt-lg-0 ps-xl-5">
             <div class="bg-white rounded-3 shadow-lg p-4">
@@ -129,6 +132,9 @@
               </div>
             </div>
           </aside>
+          {% else %}
+          <img src="{% static 'img/Cart-amico.svg' %}" style="width: 300px; margin: auto; display: flex; justify-content: center; " alt="Cart-amico.svg">
+          {% endif %}
         </div>
       </div>
     </main>

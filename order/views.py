@@ -142,8 +142,8 @@ def wishlist_page(request):
 
 @login_required
 def cart_add(request, id):
-    if not request.user.is_authenticated:
-        return JsonResponse({'message': 'User not authenticated'}, status=401)
+    # if not request.user.is_authenticated:
+    #     return JsonResponse({'message': 'User not authenticated'}, status=401)
     cart = Cart(request)
     product = Store.objects.get(id=id)
     cart.add(product=product)
