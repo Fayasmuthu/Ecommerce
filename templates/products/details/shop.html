@@ -72,6 +72,9 @@
                     {% endfor %}
                   </div>
                 </div>
+                <div id="product-list">
+                  <!-- Products will be dynamically loaded here -->
+              </div>
                 <!-- Price range -->
                 <div class="widget mb-4 pb-4 border-bottom">
                   <h3 class="widget-title">Price</h3>
@@ -92,7 +95,7 @@
                           </div>
                       </div>
                   </div>
-                </div>
+              </div>
                 <!-- Filter by Brand-->
                 <div class="widget widget-filter mb-4 pb-4 border-bottom">
                   <h3 class="widget-title">Brand</h3>
@@ -163,7 +166,7 @@
                   {% else %}
                       <!-- Handle the case where store id is empty or not valid -->
                      <p>This product is not available.</p>
-              {% endif %}
+                  {% endif %}
 
                   <span class="round-r badge bg-danger rounded-pill badge-shadow">{{store.get_price}}<br> off</span>
 

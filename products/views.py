@@ -198,7 +198,13 @@ def shop(request):
     return render(request, "products/details/shop.html",context)
 
 def shop_list(request):
-    profile = UserProfile.objects.get(user=request.user)
+    profile = None
+    wishlist_count = 0
+
+    if request.user.is_authenticated:
+        profile = UserProfile.objects.get(user=request.user)
+        wishlist_count = request.user.wishlist.count()
+
     main_category = Maincategory.objects.all()
     group_category =Groupcategory.objects.all()
     categories = Category.objects.all()  
@@ -208,7 +214,7 @@ def shop_list(request):
     brands =Brand.objects.annotate(store_count=Count('brand__name'))
     sizes =Size.objects.all()
     total_products = store.count()
-    wishlist_count =request.user.wishlist.count()
+    # wishlist_count =request.user.wishlist.count()
     sorting_option = request.GET.get('sorting')
 
 
@@ -298,6 +304,7 @@ def filter_data(request):
     t = render_to_string('ajax/store.html', {'course': course})
     return JsonResponse({'data': t})
 
+
 def filter_data_list(request):
     selected_brand = request.GET.getlist('brands[]')
     print("Selected Brands:", selected_brand)  # Add this line for debugging
@@ -317,13 +324,17 @@ def filter_products_by_price(request):
         max_price = request.GET.get('max_price')
 
         # Filter products by price range
-        filtered_products = Store.objects.filter(avaliablesize__orginal_price__gte=min_price, avaliablesize__orginal_price__lte=max_price).distinct()
+        filtered_products = Store.objects.filter(
+            avaliablesize__original_price__gte=min_price,
+            avaliablesize__original_price__lte=max_price
+        ).distinct()
 
         # Prepare data to send back as a JSON response
         data = {
             'data': render_to_string('ajax/product_list.html', {'filtered_products': filtered_products})
         }
         return JsonResponse(data)
+    return render(request, 'ajax/product_list.html', {})
 
 
 class products_detailsViews(DetailView):
